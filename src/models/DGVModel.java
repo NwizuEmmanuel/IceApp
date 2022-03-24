@@ -1,19 +1,19 @@
 package models;
 
 public class DGVModel {
-    String internValue;
-    String otherValue;
+    String DGV;
+    String CreationDate;
 
-    public DGVModel(String internValue, String otherValue) {
-        this.internValue = internValue;
-        this.otherValue = otherValue;
+    public DGVModel(String DGV, String CreationDate) {
+        this.DGV = DGV;
+        this.CreationDate = CreationDate;
     }
 
-    public String getInternValue() {
-        return internValue;
+    public String getDGV() {
+        return DGV;
     }
 
-    public String getOtherValue() {
-        return otherValue;
+    public String getCreationDate() {
+        return CreationDate;
     }
 }

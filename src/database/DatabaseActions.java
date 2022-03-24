@@ -6,6 +6,7 @@ package database;
 
 import alerts.DisplayError;
 import com.jfoenix.controls.JFXComboBox;
+import constants.GlobalVariables;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -81,7 +82,7 @@ public class DatabaseActions {
         ps.setString(3, course);
         ps.setString(4, amount);
         ps.setDate(5, Date.valueOf(regdate));
-        ps.setString(6,pref.get(PrefKeys.internDMKey, ""));
+        ps.setString(6,pref.get(PrefKeys.dgvKey, ""));
         ps.executeUpdate();
     }
 
@@ -92,21 +93,21 @@ public class DatabaseActions {
         ps.setString(2, amount);
         ps.setString(3, cashflow);
         ps.setDate(4, Date.valueOf(transacDate));
-        ps.setString(5,pref.get(PrefKeys.otherDMKey,""));
+        ps.setString(5,pref.get(PrefKeys.dgvKey,""));
         ps.executeUpdate();
     }
 
     static public void recordGroupValue() throws SQLException {
-        final String sql = "insert into "+tableNameForDGV+"(intern, other)value(?,?)";
+        final String sql = "insert into "+tableNameForDGV+"(dgv, creation_date)value(?,?)";
         PreparedStatement ps = connectToDB().prepareStatement(sql);
-        ps.setString(1, pref.get(PrefKeys.internDMKey,""));
-        ps.setString(2,pref.get(PrefKeys.otherDMKey,""));
+        ps.setString(1, pref.get(PrefKeys.dgvKey,""));
+        ps.setString(2, GlobalVariables.dgvCreationDate);
         ps.execute();
     }
 
     public void loadOthersData(TableView<OtherModel> tableView) throws SQLException {
         ObservableList<OtherModel> data = FXCollections.observableArrayList();
-        final String showOthersDataQuery = "select * from "+tableNameForOthers+" where data_group_value = '"+pref.get(PrefKeys.otherDMKey,"")+"' ";
+        final String showOthersDataQuery = "select * from "+tableNameForOthers+" where data_group_value = '"+pref.get(PrefKeys.dgvKey,"")+"' ";
         Statement statement = connectToDB().createStatement();
         ResultSet rs = statement.executeQuery(showOthersDataQuery);
         NumberFormat nf = NumberFormat.getInstance();
@@ -118,7 +119,7 @@ public class DatabaseActions {
 
     public void loadInternsData(TableView<InternModel> tableView) throws SQLException {
         ObservableList<InternModel> data = FXCollections.observableArrayList();
-        final String showInternDataQuery = "select * from "+tableNameForIntern+" where data_group_value = '"+pref.get(PrefKeys.internDMKey,"")+"' ";
+        final String showInternDataQuery = "select * from "+tableNameForIntern+" where data_group_value = '"+pref.get(PrefKeys.dgvKey,"")+"' ";
         Statement statement = connectToDB().createStatement();
         ResultSet rs = statement.executeQuery(showInternDataQuery);
         NumberFormat nf = NumberFormat.getInstance();
@@ -134,7 +135,7 @@ public class DatabaseActions {
         Statement statement = connectToDB().createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
         while (resultSet.next()){
-            data.add(new DGVModel(resultSet.getString("intern"),resultSet.getString("other")));
+            data.add(new DGVModel(resultSet.getString("dgv"),resultSet.getString("creation_date")));
         }
         tableView.setItems(data);
     }
@@ -221,7 +222,7 @@ public class DatabaseActions {
                 ",data_group_value text not null, primary key (id))";
         String query3 = "create table if not exists "+tableNameForOthers+"(item text not null, amount text not null, cashflow text not null, transac_date date not null,data_group_value text not null)";
         String query4 = "create table if not exists "+ tableNameForCoursePrice +"(course text, price text, unique key(course))";
-        String query5 = "create table if not exists "+tableNameForDGV+" (intern text not null, other text not null, unique key(intern), unique key(other))";
+        String query5 = "create table if not exists "+tableNameForDGV+" (dgv text not null, creation_date text not null, unique key(dgv))";
         PreparedStatement ps2 = connectToDB().prepareStatement(query2);
         PreparedStatement ps3 = connectToDB().prepareStatement(query3);
         PreparedStatement ps4 = connectToDB().prepareStatement(query4);

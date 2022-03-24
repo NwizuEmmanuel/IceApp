@@ -30,10 +30,10 @@ public class Dgv implements Initializable {
     private TableView<DGVModel> tableView;
 
     @FXML
-    private TableColumn<DGVModel, String> internCol;
+    private TableColumn<DGVModel, String> Col_1;
 
     @FXML
-    private TableColumn<DGVModel, String> otherCol;
+    private TableColumn<DGVModel, String> Col_2;
 
     @FXML
     private TableColumn actionsCol;
@@ -44,8 +44,8 @@ public class Dgv implements Initializable {
         } catch (SQLException e) {
             DisplayError.showErrorAlert("Can't load data.");
         }
-        internCol.setCellValueFactory(new PropertyValueFactory<>("internValue"));
-        otherCol.setCellValueFactory(new PropertyValueFactory<>("otherValue"));
+        Col_1.setCellValueFactory(new PropertyValueFactory<>("DGV"));
+        Col_2.setCellValueFactory(new PropertyValueFactory<>("CreationDate"));
         actionsCol.setCellFactory(actionCellFactory);
     }
 
@@ -70,7 +70,7 @@ public class Dgv implements Initializable {
                     Button button = new Button("use");
                     button.setOnAction(e->{
                         DGVModel dgvModel = tableView.getItems().get(getIndex());
-                        Prefs.putDataManager(dgvModel.getInternValue(), dgvModel.getOtherValue());
+                        Prefs.putDataManager(dgvModel.getDGV(), dgvModel.getDGV());
                         SuccessAlert.showAlert("DGV in use now.");
                     });
                     setGraphic(button);
