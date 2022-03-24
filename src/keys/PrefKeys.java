@@ -13,6 +13,5 @@ public class PrefKeys {
     public static String userKey="username";
     public static String passKey="password";
     public static String tableKey="tableValue";
-    public static String internDMKey = "internDataManager";
-    public static String otherDMKey = "otherDataManager";
+    public static String dgvKey = "DGV_KEY";
 }

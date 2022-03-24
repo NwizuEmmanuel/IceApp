@@ -287,29 +287,19 @@ public class MainpageController implements Initializable {
     }
 
     private void registerDGV(){
-        if(preferences.get(PrefKeys.internDMKey,"").isEmpty() || preferences.get(PrefKeys.otherDMKey,"").isEmpty()){
+        if(preferences.get(PrefKeys.dgvKey,"").isEmpty()){
             Prefs.putDataManager("idgv","odgv");
         }
     }
 
     @FXML
-    private void newDGV(){
-        try {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setContentText("Do you want create new Data group value?");
-            ButtonType yesBtn = new ButtonType("Yes");
-            ButtonType noBtn = new ButtonType("No");
-            alert.getButtonTypes().setAll(yesBtn, noBtn);
-            Optional<ButtonType> result = alert.showAndWait();
-            if(result.get()==yesBtn){
-                DatabaseActions.recordGroupValue();
-                DataManager.putDataValue();
-            }else {
-                alert.close();
-            }
-        } catch (SQLException e) {
-            DisplayError.showErrorAlert("Can't register DGV or\nAlready existed.");
-        }
+    private void newDGV() throws SQLException, IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/new_dgv/new_dgv.fxml"));
+        Stage stage = new Stage();
+        stage.setScene(new Scene(loader.load()));
+        stage.setResizable(false);
+        stage.showAndWait();
+        refresh();
     }
 
     @FXML
