@@ -7,7 +7,6 @@ package mainpage;
 import alerts.DisplayError;
 import com.jfoenix.controls.JFXButton;
 import constants.CashflowConstants;
-import constants.DataManager;
 import database.DatabaseActions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,10 +23,10 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
@@ -46,8 +45,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -258,6 +255,7 @@ public class MainpageController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/reports/reports.fxml"));
         Stage stage = new Stage();
         stage.setScene(new Scene(loader.load()));
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Reports");
         stage.setResizable(false);
         stage.show();
@@ -288,7 +286,7 @@ public class MainpageController implements Initializable {
 
     private void registerDGV(){
         if(preferences.get(PrefKeys.dgvKey,"").isEmpty()){
-            Prefs.putDataManager("idgv","odgv");
+            Prefs.putDataManager("nothing");
         }
     }
 
@@ -297,6 +295,7 @@ public class MainpageController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/new_dgv/new_dgv.fxml"));
         Stage stage = new Stage();
         stage.setScene(new Scene(loader.load()));
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
         stage.showAndWait();
         refresh();
@@ -306,6 +305,7 @@ public class MainpageController implements Initializable {
     private void viewDGV() throws IOException, SQLException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/DGV/dgv.fxml"));
         Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(new Scene(loader.load()));
         stage.showAndWait();
         refresh();
@@ -505,9 +505,12 @@ public class MainpageController implements Initializable {
         try {
             DatabaseActions da = new DatabaseActions();
             Statement statement = da.connectToDB().createStatement();
-            String commandForIncome = "SELECT sum(amount) FROM " + DatabaseActions.tableNameForOthers + " WHERE cashflow = 'income' ";
-            String commandForExpense = "SELECT sum(amount) FROM " + DatabaseActions.tableNameForOthers + " WHERE cashflow = 'expense' ";
-            String commandForInternFees= "select sum(amount) from "+DatabaseActions.tableNameForIntern+"";
+            String commandForIncome = "SELECT sum(amount) FROM " + DatabaseActions.tableNameForOthers + " WHERE cashflow = 'income' " +
+                    "and data_group_value='"+preferences.get(PrefKeys.dgvKey,"")+"' ";
+            String commandForExpense = "SELECT sum(amount) FROM " + DatabaseActions.tableNameForOthers + " WHERE cashflow = 'expense' " +
+                    "and data_group_value='"+preferences.get(PrefKeys.dgvKey,"")+"' ";
+            String commandForInternFees= "select sum(amount) from "+DatabaseActions.tableNameForIntern+" where " +
+                    "data_group_value='"+preferences.get(PrefKeys.dgvKey,"")+"' ";
 
             int incomeCount = 0;
             int expenseCount = 0;
@@ -540,7 +543,7 @@ public class MainpageController implements Initializable {
             balanceText.setText("Balance: ₦" + numberFormat.format(balance));
             incomeText.setText("Income: ₦" + numberFormat.format(totalIncome));
             expenseText.setText("Expense: ₦" + numberFormat.format(expenseCount));
-            if(incomeCount <=0 || expenseCount <=0){
+            if(totalIncome <=0 || expenseCount <=0){
                 dashboardPane.toFront();
             }else {
                 dashboardPane.toBack();

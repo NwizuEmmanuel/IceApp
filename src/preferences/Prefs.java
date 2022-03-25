@@ -35,10 +35,8 @@ public class Prefs {
         preferences.put(PrefKeys.tableKey, value);
     }
 
-    public static void putDataManager(String internValue, String otherValue){
-        preferences.remove(PrefKeys.internDMKey);
-        preferences.remove(PrefKeys.otherDMKey);
-        preferences.put(PrefKeys.internDMKey,internValue);
-        preferences.put(PrefKeys.otherDMKey, otherValue);
+    public static void putDataManager(String otherValue){
+        preferences.remove(PrefKeys.dgvKey);
+        preferences.put(PrefKeys.dgvKey, otherValue);
     }
 }

@@ -60,6 +60,7 @@ public class DatabaseActions {
             FXMLLoader lLoader = new FXMLLoader(getClass().getResource("/mainpage/mainpage.fxml"));
             Stage stage = new Stage();
             Scene scene = new Scene(lLoader.load());
+            stage.setTitle("Icehub");
             stage.setScene(scene);
             stage.setOnCloseRequest(e -> {
                 prefs.remove(PrefKeys.userKey);
@@ -136,6 +137,18 @@ public class DatabaseActions {
         ResultSet resultSet = statement.executeQuery(sql);
         while (resultSet.next()){
             data.add(new DGVModel(resultSet.getString("dgv"),resultSet.getString("creation_date")));
+        }
+        tableView.setItems(data);
+    }
+
+    static public void DGVSearchQuery(String month, String year, TableView<DGVModel> tableView) throws SQLException {
+        String sql = "select * from "+tableNameForDGV+" where creation_date like '%"+month+"%' and creation_date like '%"+year+"%' ";
+        tableView.getItems().clear();
+        ObservableList<DGVModel> data = FXCollections.observableArrayList();
+        Statement statement = connectToDB().createStatement();
+        ResultSet rs = statement.executeQuery(sql);
+        while (rs.next()){
+            data.add(new DGVModel(rs.getString("dgv"), rs.getString("creation_date")));
         }
         tableView.setItems(data);
     }

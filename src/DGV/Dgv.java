@@ -14,15 +14,18 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
+import keys.PrefKeys;
 import models.DGVModel;
 import models.InternModel;
 import models.OtherModel;
 import preferences.Prefs;
 
+import javafx.scene.text.Text;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 public class Dgv implements Initializable {
 
@@ -38,6 +41,12 @@ public class Dgv implements Initializable {
     @FXML
     private TableColumn actionsCol;
 
+    @FXML
+    private Text text;
+
+    Prefs prefs = new Prefs();
+    Preferences preferences = Preferences.userRoot().node(prefs.getClass().getName());
+
     private void setData(){
         try {
             DatabaseActions.loadDGV(tableView);
@@ -51,6 +60,7 @@ public class Dgv implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        text.setText(preferences.get(PrefKeys.dgvKey,"")+" in use");
         setData();
     }
 
@@ -70,7 +80,7 @@ public class Dgv implements Initializable {
                     Button button = new Button("use");
                     button.setOnAction(e->{
                         DGVModel dgvModel = tableView.getItems().get(getIndex());
-                        Prefs.putDataManager(dgvModel.getDGV(), dgvModel.getDGV());
+                        Prefs.putDataManager(dgvModel.getDGV());
                         SuccessAlert.showAlert("DGV in use now.");
                     });
                     setGraphic(button);
