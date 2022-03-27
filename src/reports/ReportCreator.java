@@ -6,10 +6,8 @@ import database.DatabaseActions;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,17 +28,26 @@ public class ReportCreator {
         Workbook wb = new HSSFWorkbook();
         try(OutputStream os = new FileOutputStream(file+"\\"+fileName)) {
             Sheet sheet1 = wb.createSheet("Intern Reports");
+            Font fontSheet1 = wb.createFont();
+            fontSheet1.setBold(true);
+            CellStyle cellStyleSheet1 = wb.createCellStyle();
+            cellStyleSheet1.setFont(fontSheet1);
             Row row = sheet1.createRow(0);
             Cell cell = row.createCell(0);
             cell.setCellValue("FULLNAME");
+            cell.setCellStyle(cellStyleSheet1);
             Cell cell2 = row.createCell(1);
             cell2.setCellValue("TELEPHONE");
+            cell2.setCellStyle(cellStyleSheet1);
             Cell cell3 = row.createCell(2);
             cell3.setCellValue("COURSE");
+            cell3.setCellStyle(cellStyleSheet1);
             Cell cell4 = row.createCell(3);
-            cell4.setCellValue("AMOUNT");
+            cell4.setCellValue("AMOUNT(₦)");
+            cell4.setCellStyle(cellStyleSheet1);
             Cell cell5 = row.createCell(4);
             cell5.setCellValue("REGISTRATION DATE");
+            cell5.setCellStyle(cellStyleSheet1);
 
             int rowNum = 1;
             while (rsInternQuery.next()){
@@ -48,11 +55,13 @@ public class ReportCreator {
                 Cell cellA1 = row.createCell(0);
                 cellA1.setCellValue(rsInternQuery.getString("fullname"));
                 Cell cellA2 = row.createCell(1);
-                cellA2.setCellValue(rsInternQuery.getString("telephone"));
+                String tel = rsInternQuery.getString("telephone");
+                String tel2 = tel.replaceFirst("^[0]","+234");
+                cellA2.setCellValue(tel2);
                 Cell cellA3 = row.createCell(2);
                 cellA3.setCellValue(rsInternQuery.getString("course"));
                 Cell cellA4 = row.createCell(3);
-                cellA4.setCellValue(rsInternQuery.getString("Amount"));
+                cellA4.setCellValue(Integer.parseInt(rsInternQuery.getString("Amount")));
                 Cell cellA5 = row.createCell(4);
                 cellA5.setCellValue(rsInternQuery.getString("regdate"));
                 rowNum++;
@@ -67,22 +76,35 @@ public class ReportCreator {
 
             Row row3 = sheet1.createRow(rowNum+1);
             Cell cellB1 = row3.createCell(0);
-            cellB1.setCellValue("Total amount");
-            Cell cellB2 = row3.createCell(1);
-            cellB2.setCellValue(totalAmountIntern);
+            cellB1.setCellValue("Total amount = ₦"+totalAmountIntern);
+            cellB1.setCellStyle(cellStyleSheet1);
+            sheet1.addMergedRegion(new CellRangeAddress(rowNum+1,rowNum+1,0,1));
+            sheet1.autoSizeColumn(0);
+            sheet1.autoSizeColumn(1);
+            sheet1.autoSizeColumn(2);
+            sheet1.autoSizeColumn(3);
+            sheet1.autoSizeColumn(4);
             rsTotalAmountIntern.close();
 
             ResultSet rsOtherQuery = statement.executeQuery(otherQuery);
             Sheet sheet2 = wb.createSheet("Other Reports");
+            Font fontSheet2 = wb.createFont();
+            fontSheet2.setBold(true);
+            CellStyle cellStyleSheet2 = wb.createCellStyle();
+            cellStyleSheet2.setFont(fontSheet2);
             Row rowSheet2 = sheet2.createRow(0);
             Cell cellSheetA1 = rowSheet2.createCell(0);
             cellSheetA1.setCellValue("ITEM");
+            cellSheetA1.setCellStyle(cellStyleSheet2);
             Cell cellSheetA2 = rowSheet2.createCell(1);
-            cellSheetA2.setCellValue("AMOUNT");
+            cellSheetA2.setCellValue("AMOUNT(₦)");
+            cellSheetA2.setCellStyle(cellStyleSheet2);
             Cell cellSheetA3 = rowSheet2.createCell(2);
             cellSheetA3.setCellValue("CASHFLOW");
+            cellSheetA3.setCellStyle(cellStyleSheet2);
             Cell cellSheetA4 = rowSheet2.createCell(3);
             cellSheetA4.setCellValue("TRANSACTION DATE");
+            cellSheetA4.setCellStyle(cellStyleSheet2);
 
             int rowNumSheet2 = 1;
             while (rsOtherQuery.next()){
@@ -90,7 +112,7 @@ public class ReportCreator {
                 Cell cellA1 = row2.createCell(0);
                 cellA1.setCellValue(rsOtherQuery.getString("item"));
                 Cell cellA2 = row2.createCell(1);
-                cellA2.setCellValue(rsOtherQuery.getString("amount"));
+                cellA2.setCellValue(Integer.parseInt(rsOtherQuery.getString("amount")));
                 Cell cellA3 = row2.createCell(2);
                 cellA3.setCellValue(rsOtherQuery.getString("cashflow"));
                 Cell cellA4 = row2.createCell(3);
@@ -106,9 +128,13 @@ public class ReportCreator {
             }
             Row row4 = sheet2.createRow(rowNumSheet2+1);
             Cell cellC1 = row4.createCell(0);
-            cellC1.setCellValue("Total amount");
-            Cell cellC2 = row4.createCell(1);
-            cellC2.setCellValue(totalAmountForOther);
+            cellC1.setCellValue("Total amount = ₦"+totalAmountForOther);
+            cellC1.setCellStyle(cellStyleSheet2);
+            sheet2.addMergedRegion(new CellRangeAddress(rowNumSheet2+1,rowNumSheet2+1,0,2));
+            sheet2.autoSizeColumn(0);
+            sheet2.autoSizeColumn(1);
+            sheet2.autoSizeColumn(2);
+            sheet2.autoSizeColumn(3);
             rsTotalOtherAmount.close();
 
             wb.write(os);
