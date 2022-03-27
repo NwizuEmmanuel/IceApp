@@ -81,6 +81,7 @@ public class Dgv implements Initializable {
                     button.setOnAction(e->{
                         DGVModel dgvModel = tableView.getItems().get(getIndex());
                         Prefs.putDataManager(dgvModel.getDGV());
+                        text.setText(dgvModel.getDGV());
                         SuccessAlert.showAlert("DGV in use now.");
                     });
                     setGraphic(button);
