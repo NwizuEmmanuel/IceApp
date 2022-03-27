@@ -6,18 +6,16 @@ package table_scenes;
 
 import com.jfoenix.controls.JFXComboBox;
 import database.DatabaseActions;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import preferences.Prefs;
+
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.layout.VBox;
-import preferences.Prefs;
 
 /**
  * FXML Controller class
@@ -28,8 +26,6 @@ public class Table_sceneController implements Initializable {
 
     @FXML
     private JFXComboBox<String> courseInput;
-    @FXML
-    private VBox body;
 
     /**
      * Initializes the controller class.

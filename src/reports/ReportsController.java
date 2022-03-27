@@ -1,8 +1,8 @@
 package reports;
 
 import alerts.DisplayError;
-import alerts.SuccessAlert;
-import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextField;
 import database.DatabaseActions;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -100,9 +100,7 @@ public class ReportsController implements Initializable {
                         DirectoryChooser directoryChooser = new DirectoryChooser();
                         File file = directoryChooser.showDialog(new Stage());
                         try {
-                            if(directoryChooser != null){
-                                ReportCreator.createReport(dgvModel.getDGV(), file);
-                            }
+                            ReportCreator.createReport(dgvModel.getDGV(), file);
                         } catch (SQLException ex) {
                             DisplayError.showErrorAlert("Error can't get report.");
                         }
