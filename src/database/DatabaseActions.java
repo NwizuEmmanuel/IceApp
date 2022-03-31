@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import keys.PrefKeys;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.prefs.Preferences;
 
 public class DatabaseActions {
@@ -38,6 +40,7 @@ public class DatabaseActions {
     public static String tableNameForOthers = "other_data";
     public static String tableNameForCoursePrice ="course_price";
     public static String tableNameForDGV = "dgv"; // dgv = data value group
+    public static String dummyTable = "dummyTable";
 
     static public Connection connectToDB() {
         Connection connection = null;
@@ -60,8 +63,9 @@ public class DatabaseActions {
             FXMLLoader lLoader = new FXMLLoader(getClass().getResource("/mainpage/mainpage.fxml"));
             Stage stage = new Stage();
             Scene scene = new Scene(lLoader.load());
-            stage.setTitle("Icehub");
+            stage.setTitle("ICE MS");
             stage.setScene(scene);
+            stage.getIcons().add(new Image(Objects.requireNonNull(DatabaseActions.class.getResourceAsStream("/assets/Ice Logo.png"))));
             stage.setOnCloseRequest(e -> {
                 prefs.remove(PrefKeys.userKey);
                 prefs.remove(PrefKeys.passKey);
@@ -236,13 +240,16 @@ public class DatabaseActions {
         String query3 = "create table if not exists "+tableNameForOthers+"(item text not null, amount text not null, cashflow text not null, transac_date date not null,data_group_value text not null)";
         String query4 = "create table if not exists "+ tableNameForCoursePrice +"(course text, price text, unique key(course))";
         String query5 = "create table if not exists "+tableNameForDGV+" (dgv text not null, creation_date text not null, unique key(dgv))";
+        String query6 = "create table if not exists "+dummyTable+" (dummy_text text null)";
         PreparedStatement ps2 = connectToDB().prepareStatement(query2);
         PreparedStatement ps3 = connectToDB().prepareStatement(query3);
         PreparedStatement ps4 = connectToDB().prepareStatement(query4);
         PreparedStatement ps5 = connectToDB().prepareStatement(query5);
+        PreparedStatement ps6 = connectToDB().prepareStatement(query6);
         ps2.execute();
         ps3.execute();
         ps4.execute();
         ps5.execute();
+        ps6.execute();
    }
 }

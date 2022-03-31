@@ -6,10 +6,7 @@ import com.jfoenix.controls.JFXTextField;
 import database.DatabaseActions;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -99,10 +96,12 @@ public class ReportsController implements Initializable {
                         DGVModel dgvModel = tableView.getItems().get(getIndex());
                         DirectoryChooser directoryChooser = new DirectoryChooser();
                         File file = directoryChooser.showDialog(new Stage());
-                        try {
-                            ReportCreator.createReport(dgvModel.getDGV(), file);
-                        } catch (SQLException ex) {
-                            DisplayError.showErrorAlert("Error can't get report.");
+                        if(file != null){
+                            try {
+                                ReportCreator.createReport(dgvModel.getDGV(), file);
+                            } catch (SQLException ex) {
+                                DisplayError.showErrorAlert("Error can't get report.");
+                            }
                         }
                     });
                     setGraphic(button);

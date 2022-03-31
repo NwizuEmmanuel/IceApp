@@ -7,14 +7,12 @@ package course_setting;
 import alerts.DisplayError;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import constants.GlobalVariables;
 import database.DatabaseActions;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableCell;
@@ -26,7 +24,6 @@ import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import models.CoursePriceModel;
 import models.InternModel;
-import models.OtherModel;
 
 /**
  * FXML Controller class
@@ -70,10 +67,14 @@ public class Course_settingController implements Initializable {
     }    
 
     @FXML
-    private void addListener(ActionEvent event) throws SQLException {
+    private void addListener() throws SQLException {
         DatabaseActions da = new DatabaseActions();
         if(priceInput.getText().matches("[0-9]+")){
-            da.coursePriceInput(courseInput.getText(), priceInput.getText());
+            try {
+                da.coursePriceInput(courseInput.getText(), priceInput.getText());
+            } catch (SQLException ex) {
+                DisplayError.showErrorAlert(GlobalVariables.privilegeMsg);
+            }
         }else {
             DisplayError.showErrorAlert("Only numbers is allowed.");
         }
@@ -93,26 +94,24 @@ public class Course_settingController implements Initializable {
 
                 if (empty) {
                     setGraphic(null);
-                    setText(null);
                 } else {
                     final JFXButton button = new JFXButton("delete");
                     button.setGraphic(new ImageView(new Image("/assets/icons8_waste_32px.png")));
                     button.setStyle("-fx-background-color: #E9E9E9;");
                     button.setOnAction(e -> {
                         CoursePriceModel im = tableview.getItems().get(getIndex());
-                        DatabaseActions da = new DatabaseActions();
                         String query = "delete from course_price where course='" + im.getCourse()+ "'";
                         try {
-                            PreparedStatement ps = da.connectToDB().prepareStatement(query);
+                            PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(query);
                             ps.execute();
                             showDataOntable();
                         } catch (SQLException ex) {
-                            DisplayError.showErrorAlert(ex.getMessage());
+                            DisplayError.showErrorAlert(GlobalVariables.privilegeMsg);
                         }
                     });
                     setGraphic(button);
-                    setText(null);
                 }
+                setText(null);
             }
         };
 

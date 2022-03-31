@@ -12,6 +12,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import keys.PrefKeys;
 import preferences.Prefs;
@@ -31,11 +32,12 @@ public class IceApp extends Application {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main.fxml")));
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle("Ice network");
+        stage.setTitle("Ice Network");
         stage.setOnCloseRequest(e -> {
             prefs.remove(PrefKeys.userKey);
             prefs.remove(PrefKeys.passKey);
         });
+        stage.getIcons().add(new Image(Objects.requireNonNull(IceApp.class.getResourceAsStream("/assets/Ice Logo.png"))));
         stage.setResizable(false);
         stage.setMaximized(false);
         stage.show();

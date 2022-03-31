@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import preferences.Prefs;
 
@@ -27,6 +28,8 @@ public class IpmController implements Initializable {
     private Button assignBtn;
     @FXML
     private Text invalidIndicator;
+    @FXML
+    private VBox body;
 
     /**
      * Initializes the controller class.
@@ -38,6 +41,7 @@ public class IpmController implements Initializable {
             prefs.writeIpAddress(ipTextfield.getText());
             IpAlert ia = new IpAlert();
             ia.showIpAlert();
+            body.getScene().getWindow().hide();
         }else{
             invalidIndicator.setVisible(true);
         }

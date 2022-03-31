@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXSpinner?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
@@ -22,6 +23,11 @@
             <Button mnemonicParsing="false" onAction="#searchBtn" text="search" />
             <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                <children>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <JFXSpinner fx:id="spinner" prefHeight="46.0" prefWidth="47.0" visible="false" />
+                     </children>
+                  </HBox>
                   <Button mnemonicParsing="false" onAction="#reload">
                      <graphic>
                         <FontAwesomeIconView glyphName="REFRESH" size="15" />

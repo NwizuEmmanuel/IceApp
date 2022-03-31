@@ -2,28 +2,23 @@ package DGV;
 
 import alerts.DisplayError;
 import alerts.SuccessAlert;
-import com.jfoenix.controls.JFXButton;
+import constants.GlobalVariables;
 import database.DatabaseActions;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import keys.PrefKeys;
 import models.DGVModel;
-import models.InternModel;
-import models.OtherModel;
 import preferences.Prefs;
 
 import javafx.scene.text.Text;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -77,6 +72,8 @@ public class Dgv implements Initializable {
                 if (empty) {
                     setGraphic(null);
                 } else {
+                    HBox box = new HBox();
+                    box.setSpacing(10);
                     Button button = new Button("use");
                     button.setOnAction(e->{
                         DGVModel dgvModel = tableView.getItems().get(getIndex());
@@ -84,7 +81,41 @@ public class Dgv implements Initializable {
                         text.setText(dgvModel.getDGV()+"in use");
                         SuccessAlert.showAlert("DGV in use now.");
                     });
-                    setGraphic(button);
+                    Button button1 = new Button("delete");
+                    button1.setOnAction(e->{
+                        DGVModel dgvModel = tableView.getItems().get(getIndex());
+                        String sql1 = "delete from "+DatabaseActions.tableNameForDGV+" where dgv='"+dgvModel.getDGV()+"' ";
+                        String sql2 = "delete from "+DatabaseActions.tableNameForIntern+" where data_group_value='"+dgvModel.getDGV()+"' ";
+                        String sql3 = "delete from "+DatabaseActions.tableNameForOthers+" where data_group_value='"+dgvModel.getDGV()+"' ";
+                        try {
+                            PreparedStatement ps1 = DatabaseActions.connectToDB().prepareStatement(sql1);
+                            PreparedStatement ps2 = DatabaseActions.connectToDB().prepareStatement(sql2);
+                            PreparedStatement ps3 = DatabaseActions.connectToDB().prepareStatement(sql3);
+
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                            alert.setContentText("Do you want to delete this?");
+                            alert.setTitle("Confirmation");
+                            alert.setHeaderText("Confirmation dialogue");
+                            ButtonType noButton = new ButtonType("No");
+                            ButtonType yesButton = new ButtonType("Yes");
+                            alert.getButtonTypes().setAll(yesButton,noButton);
+                            Optional<ButtonType> result = alert.showAndWait();
+                            if(result.isPresent()){
+                                if(result.get() == yesButton){
+                                    ps1.execute();
+                                    ps2.execute();
+                                    ps3.execute();
+                                    setData();
+                                }else {
+                                    alert.close();
+                                }
+                            }
+                        } catch (SQLException ex) {
+                            DisplayError.showErrorAlert(GlobalVariables.privilegeMsg);
+                        }
+                    });
+                    box.getChildren().addAll(button,button1);
+                    setGraphic(box);
                 }
                 setText(null);
             }

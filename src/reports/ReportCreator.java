@@ -3,8 +3,6 @@ package reports;
 import alerts.DisplayError;
 import alerts.SuccessAlert;
 import database.DatabaseActions;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -21,7 +19,10 @@ public class ReportCreator {
         String internQuery = "select fullname, telephone, course, amount, regdate from "+ DatabaseActions.tableNameForIntern+" where data_group_value = '"+dgv+"' ";
         String otherQuery = "select item, amount, cashflow, transac_date from "+DatabaseActions.tableNameForOthers+" where data_group_value = '"+dgv+"' ";
         String totalInternAmount = "select sum(amount) from "+DatabaseActions.tableNameForIntern+" where data_group_value = '"+dgv+"' ";
-        String totalOtherAmount = "select sum(amount) from "+DatabaseActions.tableNameForOthers+" where data_group_value = '"+dgv+"' ";
+        String totalOtherIncome = "select sum(amount) from "+DatabaseActions.tableNameForOthers+" where data_group_value = '"+dgv+"' " +
+                "and cashflow='income' ";
+        String totalOtherExpense = "select sum(amount) from "+DatabaseActions.tableNameForOthers+" where data_group_value = '"+dgv+"' " +
+                "and cashflow='expense' ";
         Statement statement = DatabaseActions.connectToDB().createStatement();
         ResultSet rsInternQuery = statement.executeQuery(internQuery);
         String fileName = dgv + ".xls";
@@ -121,21 +122,33 @@ public class ReportCreator {
             }
             rsOtherQuery.close();
 
-            ResultSet rsTotalOtherAmount = statement.executeQuery(totalOtherAmount);
-            int totalAmountForOther = 0;
-            while (rsTotalOtherAmount.next()){
-                totalAmountForOther = rsTotalOtherAmount.getInt("sum(amount)");
+            ResultSet rsTotalOtherIncome = statement.executeQuery(totalOtherIncome);
+            int totalIncomeForOther = 0;
+            while (rsTotalOtherIncome.next()){
+                totalIncomeForOther = rsTotalOtherIncome.getInt("sum(amount)");
             }
             Row row4 = sheet2.createRow(rowNumSheet2+1);
             Cell cellC1 = row4.createCell(0);
-            cellC1.setCellValue("Total amount = ₦"+totalAmountForOther);
+            cellC1.setCellValue("Total income = ₦"+totalIncomeForOther);
             cellC1.setCellStyle(cellStyleSheet2);
             sheet2.addMergedRegion(new CellRangeAddress(rowNumSheet2+1,rowNumSheet2+1,0,2));
+
+            ResultSet rsTotalOtherExpense = statement.executeQuery(totalOtherExpense);
+            int totalExpenseForOther = 0;
+            while (rsTotalOtherExpense.next()){
+                totalExpenseForOther = rsTotalOtherExpense.getInt("sum(amount)");
+            }
+            Row row5 = sheet2.createRow(rowNumSheet2+2);
+            Cell cellD1 = row5.createCell(0);
+            cellD1.setCellValue("Total expense = ₦"+totalExpenseForOther);
+            cellD1.setCellStyle(cellStyleSheet2);
+            sheet2.addMergedRegion(new CellRangeAddress(rowNumSheet2+2,rowNumSheet2+2,0,2));
             sheet2.autoSizeColumn(0);
             sheet2.autoSizeColumn(1);
             sheet2.autoSizeColumn(2);
             sheet2.autoSizeColumn(3);
-            rsTotalOtherAmount.close();
+            rsTotalOtherIncome.close();
+            rsTotalOtherExpense.close();
 
             wb.write(os);
             SuccessAlert.showAlert("Done!");

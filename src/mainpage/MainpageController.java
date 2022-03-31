@@ -7,6 +7,7 @@ package mainpage;
 import alerts.DisplayError;
 import com.jfoenix.controls.JFXButton;
 import constants.CashflowConstants;
+import constants.GlobalVariables;
 import database.DatabaseActions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -45,6 +46,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.NumberFormat;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -148,6 +150,7 @@ public class MainpageController implements Initializable {
         Scene scene = new Scene(loader.load());
         stage.setResizable(false);
         stage.setTitle("Registrar");
+        stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
         stage.setScene(scene);
         stage.showAndWait();
         showDataOnInternTable();
@@ -160,6 +163,7 @@ public class MainpageController implements Initializable {
         Scene scene = new Scene(loader.load());
         stage.setResizable(false);
         stage.setTitle("Registrar");
+        stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
         stage.setScene(scene);
         stage.showAndWait();
         showDataOnOthersTable();
@@ -251,14 +255,22 @@ public class MainpageController implements Initializable {
 
     @FXML
     private void onPress_child_4() throws IOException {
-        report_child.setStyle("-fx-background-color: #A6A6A6;");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/reports/reports.fxml"));
-        Stage stage = new Stage();
-        stage.setScene(new Scene(loader.load()));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("Reports");
-        stage.setResizable(false);
-        stage.show();
+        try{
+            String sql = "alter table "+DatabaseActions.dummyTable+" modify dummy_text text not null";
+            PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sql);
+            ps.execute();
+            report_child.setStyle("-fx-background-color: #A6A6A6;");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/reports/reports.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(loader.load()));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
+            stage.setTitle("Reports");
+            stage.setResizable(false);
+            stage.show();
+        }catch (SQLException e){
+            DisplayError.showErrorAlert(GlobalVariables.privilegeMsg2);
+        }
     }
 
     private void showDashboardFirst() {
@@ -296,6 +308,7 @@ public class MainpageController implements Initializable {
         Stage stage = new Stage();
         stage.setScene(new Scene(loader.load()));
         stage.initModality(Modality.APPLICATION_MODAL);
+        stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
         stage.setResizable(false);
         stage.showAndWait();
         refresh();
@@ -306,6 +319,7 @@ public class MainpageController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/DGV/dgv.fxml"));
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
+        stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
         stage.setScene(new Scene(loader.load()));
         stage.showAndWait();
         refresh();
@@ -381,7 +395,7 @@ public class MainpageController implements Initializable {
                 DisplayError.showErrorAlert("Only letters and white spaces");
             }
         } catch (SQLException e) {
-            DisplayError.showErrorAlert(e.getMessage());
+            DisplayError.showErrorAlert(GlobalVariables.privilegeMsg);
         }
         showDataOnInternTable();
     }
@@ -392,7 +406,7 @@ public class MainpageController implements Initializable {
         InternModel im = internTable.getSelectionModel().getSelectedItem();
         DatabaseActions da = new DatabaseActions();
         String query = "select amount from " +DatabaseActions.tableNameForIntern+ " where telephone='" + im.getTelephone() + "'";
-        Statement statement = da.connectToDB().createStatement();
+        Statement statement = DatabaseActions.connectToDB().createStatement();
         ResultSet rs = statement.executeQuery(query);
         double initialAmount = 0;
         while (rs.next()) {
@@ -403,10 +417,14 @@ public class MainpageController implements Initializable {
                 double result = initialAmount + Double.parseDouble(newValue.toString());
                 da.internUpdater("amount", "telephone", String.valueOf(result), im.getTelephone());
             } catch (NumberFormatException | SQLException e) {
-                DisplayError.showErrorAlert(e.getMessage());
+                DisplayError.showErrorAlert(GlobalVariables.privilegeMsg);
             }
         } else if (newValue.toString().contains("clear")) {
-            da.internUpdater("amount", "telephone", "0", im.getTelephone());
+            try {
+                da.internUpdater("amount", "telephone", "0", im.getTelephone());
+            } catch (SQLException ex) {
+                DisplayError.showErrorAlert(GlobalVariables.privilegeMsg);
+            }
         } else {
             DisplayError.showErrorAlert("Invalid parameter.");
         }
@@ -425,7 +443,7 @@ public class MainpageController implements Initializable {
                 DisplayError.showErrorAlert("Characters must be <= 11");
             }
         } catch (SQLException ex) {
-            DisplayError.showErrorAlert(ex.getMessage());
+            DisplayError.showErrorAlert(GlobalVariables.privilegeMsg);
         }
         showDataOnInternTable();
     }
@@ -436,20 +454,25 @@ public class MainpageController implements Initializable {
         Scene scene = new Scene(loader.load());
         stage.initStyle(StageStyle.UNIFIED);
         stage.setScene(scene);
+        stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
         stage.showAndWait();
         showDataOnInternTable();
     }
 
     @FXML
-    private void courseOnEditCommit(CellEditEvent<InternModel, String> event) throws SQLException, IOException {
+    private void courseOnEditCommit(CellEditEvent<InternModel, String> event) throws IOException, SQLException {
         Object newValue = event.getNewValue();
         Prefs prefClass = new Prefs();
         Preferences pref = Preferences.userRoot().node(prefClass.getClass().getName());
         if (newValue.equals("show")) {
             InternModel im = internTable.getSelectionModel().getSelectedItem();
             DatabaseActions da = new DatabaseActions();
-            showTableScene();
-            da.internUpdater("course", "fullname", pref.get(PrefKeys.tableKey, ""), im.getFullName());
+            try {
+                showTableScene();
+                da.internUpdater("course", "fullname", pref.get(PrefKeys.tableKey, ""), im.getFullName());
+            } catch (SQLException ex) {
+                DisplayError.showErrorAlert(GlobalVariables.privilegeMsg);
+            }
         } else {
             DisplayError.showErrorAlert("Invalid input");
         }
@@ -474,14 +497,13 @@ public class MainpageController implements Initializable {
                     button.setStyle("-fx-background-color: #E9E9E9;");
                     button.setOnAction(e -> {
                         OtherModel im = othersTable.getItems().get(getIndex());
-                        DatabaseActions da = new DatabaseActions();
                         String query = "delete from " + DatabaseActions.tableNameForOthers + " where item='" + im.getItem() + "'";
                         try {
-                            PreparedStatement ps = da.connectToDB().prepareStatement(query);
+                            PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(query);
                             ps.execute();
                             showDataOnOthersTable();
                         } catch (SQLException ex) {
-                            DisplayError.showErrorAlert(ex.getMessage());
+                            DisplayError.showErrorAlert(GlobalVariables.privilegeMsg);
                         }
                     });
                     setGraphic(button);
@@ -497,14 +519,14 @@ public class MainpageController implements Initializable {
         Stage stage = new Stage();
         Scene scene = new Scene(loader.load());
         stage.setTitle("Course setting");
+        stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
         stage.setScene(scene);
         stage.show();
     }
 
     private void loadCashFlowPie() {
         try {
-            DatabaseActions da = new DatabaseActions();
-            Statement statement = da.connectToDB().createStatement();
+            Statement statement = DatabaseActions.connectToDB().createStatement();
             String commandForIncome = "SELECT sum(amount) FROM " + DatabaseActions.tableNameForOthers + " WHERE cashflow = 'income' " +
                     "and data_group_value='"+preferences.get(PrefKeys.dgvKey,"")+"' ";
             String commandForExpense = "SELECT sum(amount) FROM " + DatabaseActions.tableNameForOthers + " WHERE cashflow = 'expense' " +

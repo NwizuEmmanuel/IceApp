@@ -12,7 +12,7 @@ import javafx.scene.control.Alert;
  */
 public class IpAlert {
     public void showIpAlert(){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
         alert.setTitle("Error");
         alert.setContentText("Ip assigned successfully");
