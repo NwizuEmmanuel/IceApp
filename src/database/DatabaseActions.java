@@ -252,4 +252,16 @@ public class DatabaseActions {
         ps5.execute();
         ps6.execute();
    }
+
+   static public void adminChecker() {
+       try {
+           String sqlRestrict = "alter table "+DatabaseActions.dummyTable+" modify dummy_text text not null";
+           PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sqlRestrict);
+           ps.execute();
+           GlobalVariables.isAdmin = true;
+       } catch (SQLException ex) {
+           System.out.println("Not admin!");
+       }
+       System.out.println(GlobalVariables.isAdmin);
+   }
 }

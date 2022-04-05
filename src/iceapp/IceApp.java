@@ -4,8 +4,10 @@
  */
 package iceapp;
 
-import database.DatabaseActions;
-
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.prefs.Preferences;
 import javafx.application.Application;
@@ -29,6 +31,9 @@ public class IceApp extends Application {
 //    ice database name is icehub
     @Override
     public void start(Stage stage) throws Exception {
+        startUpInitCheck();
+        checkStartUp();
+        startUpGuide();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main.fxml")));
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -41,6 +46,27 @@ public class IceApp extends Application {
         stage.setResizable(false);
         stage.setMaximized(false);
         stage.show();
+    }
+
+    private void startUpGuide() throws URISyntaxException, IOException {
+        if(prefs.get(PrefKeys.startUpKey, "").equals("yes")){
+            Desktop desk = Desktop.getDesktop();
+            desk.browse(new URI("https://nwizuemmanuel200.medium.com/ice-management-app-ice-ma-93f2436265d4"));
+        }
+    }
+
+    private void checkStartUp(){
+        if(prefs.get(PrefKeys.startUpKey, "").equals("yes")){
+            Prefs.putStartUp("yes");
+        }else {
+            Prefs.removeStartUp("no");
+        }
+    }
+
+    private void startUpInitCheck(){
+        if(prefs.get(PrefKeys.startUpKey, "").isEmpty()){
+            Prefs.putStartUp("yes");
+        }
     }
 
     /**

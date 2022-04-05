@@ -5,6 +5,7 @@
 package iceapp;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import database.DatabaseActions;
@@ -14,12 +15,17 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import keys.PrefKeys;
+import preferences.Prefs;
 
 /**
  *
@@ -28,22 +34,21 @@ import javafx.stage.Stage;
 public class MainController implements Initializable {
 
     @FXML
-    public Pane loginPane;
-
-    @FXML
-    private JFXButton cancel_btn;
-
-    @FXML
-    private JFXButton authenticate_btn;
+    public VBox loginPane;
     @FXML
     private JFXTextField userField;
     @FXML
     private JFXPasswordField passField;
+    @FXML
+    private JFXCheckBox checkBox;
 
     @FXML
     private void cancelBtnListener() {
         System.exit(0);
     }
+
+    Prefs p = new Prefs();
+    Preferences preferences = Preferences.userRoot().node(p.getClass().getName());
 
     @FXML
     private void ipAssigner() throws IOException {
@@ -60,7 +65,21 @@ public class MainController implements Initializable {
         da.loginAction(userField.getText(), passField.getText(), loginPane);
     }
 
+    @FXML
+    private void checkBoxListener(){
+        if(checkBox.isSelected()){
+            Prefs.putStartUp("yes");
+        }else {
+            Prefs.removeStartUp("no");
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if(preferences.get(PrefKeys.startUpKey, "").equals("yes")){
+            checkBox.setSelected(true);
+        }else {
+            checkBox.setSelected(false);
+        }
     }
 }

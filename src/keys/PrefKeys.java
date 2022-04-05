@@ -14,4 +14,5 @@ public class PrefKeys {
     public static String passKey="password";
     public static String tableKey="tableValue";
     public static String dgvKey = "DGV_KEY";
+    public static String startUpKey = "startUp";
 }

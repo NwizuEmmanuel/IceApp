@@ -121,6 +121,10 @@ public class MainpageController implements Initializable {
     private VBox dashboardPane;
     @FXML
     private BorderPane report_child;
+    @FXML
+    private JFXButton newBtn;
+    @FXML
+    private JFXButton courseSettingBtn;
 
     static NumberFormat numberFormat = NumberFormat.getInstance();
 
@@ -136,6 +140,8 @@ public class MainpageController implements Initializable {
 
     static Prefs prefsClass = new Prefs();
     static Preferences preferences = Preferences.userRoot().node(prefsClass.getClass().getName());
+
+    String sqlRestrict = "alter table "+DatabaseActions.dummyTable+" modify dummy_text text not null";
 
     private void hideCircleIndicators() {
         circle_1.setVisible(false);
@@ -256,8 +262,7 @@ public class MainpageController implements Initializable {
     @FXML
     private void onPress_child_4() throws IOException {
         try{
-            String sql = "alter table "+DatabaseActions.dummyTable+" modify dummy_text text not null";
-            PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sql);
+            PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sqlRestrict);
             ps.execute();
             report_child.setStyle("-fx-background-color: #A6A6A6;");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/reports/reports.fxml"));
@@ -303,15 +308,25 @@ public class MainpageController implements Initializable {
     }
 
     @FXML
-    private void newDGV() throws SQLException, IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/new_dgv/new_dgv.fxml"));
-        Stage stage = new Stage();
-        stage.setScene(new Scene(loader.load()));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
-        stage.setResizable(false);
-        stage.showAndWait();
-        refresh();
+    private void newDGV()throws IOException {
+        try{
+                PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sqlRestrict);
+                ps.execute();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/new_dgv/new_dgv.fxml"));
+                Stage stage = new Stage();
+                stage.setScene(new Scene(loader.load()));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
+                stage.setResizable(false);
+                stage.showAndWait();
+            try {
+                refresh();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }catch (SQLException ex){
+            DisplayError.showErrorAlert(GlobalVariables.privilegeMsg2);
+        }
     }
 
     @FXML
@@ -334,6 +349,7 @@ public class MainpageController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(MainpageController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        DatabaseActions.adminChecker();
         otherCashflowCB.getItems().addAll(CashflowConstants.const_income, CashflowConstants.const_expense);
         showDashboardFirst();
         try {
@@ -347,6 +363,7 @@ public class MainpageController implements Initializable {
             Logger.getLogger(MainpageController.class.getName()).log(Level.SEVERE, null, ex);
         }
         loadCashFlowPie();
+        restrictions();
     }
 
     private void showDataOnOthersTable() throws SQLException {
@@ -515,13 +532,19 @@ public class MainpageController implements Initializable {
 
     @FXML
     private void courseSettingAction() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/course_setting/course_setting.fxml"));
-        Stage stage = new Stage();
-        Scene scene = new Scene(loader.load());
-        stage.setTitle("Course setting");
-        stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
-        stage.setScene(scene);
-        stage.show();
+        try{
+            PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sqlRestrict);
+            ps.execute();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/course_setting/course_setting.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(loader.load());
+            stage.setTitle("Course setting");
+            stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
+            stage.setScene(scene);
+            stage.show();
+        }catch (SQLException e){
+            DisplayError.showErrorAlert(GlobalVariables.privilegeMsg2);
+        }
     }
 
     private void loadCashFlowPie() {
@@ -584,6 +607,20 @@ public class MainpageController implements Initializable {
         showDataOnInternTable();
         showDataOnOthersTable();
         loadCashFlowPie();
+    }
+
+    private void restrictions(){
+        if(!GlobalVariables.isAdmin){
+            report_child.setVisible(false);
+            report_child.setManaged(false);
+            newBtn.setVisible(false);
+            newBtn.setManaged(false);
+            internTable.setEditable(false);
+            othersTable.setEditable(false);
+            othersActionCol.setVisible(false);
+            courseSettingBtn.setVisible(false);
+            courseSettingBtn.setManaged(false);
+        }
     }
 
 }

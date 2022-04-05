@@ -116,6 +116,10 @@ public class Dgv implements Initializable {
                     });
                     box.getChildren().addAll(button,button1);
                     setGraphic(box);
+                    if(!GlobalVariables.isAdmin){
+                        button1.setVisible(false);
+                        button1.setManaged(false);
+                    }
                 }
                 setText(null);
             }

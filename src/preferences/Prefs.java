@@ -4,8 +4,6 @@
  */
 package preferences;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.prefs.Preferences;
 import keys.PrefKeys;
 
@@ -38,5 +36,12 @@ public class Prefs {
     public static void putDataManager(String otherValue){
         preferences.remove(PrefKeys.dgvKey);
         preferences.put(PrefKeys.dgvKey, otherValue);
+    }
+
+    static public void putStartUp(String str){
+        preferences.put(PrefKeys.startUpKey, str);
+    }
+    static public void removeStartUp(String str){
+        preferences.put(PrefKeys.startUpKey, str);
     }
 }
