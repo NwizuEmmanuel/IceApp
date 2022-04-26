@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" prefHeight="561.0" prefWidth="677.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="add_record.Add_recordController">
+   <children>
+      <TabPane focusTraversable="false" prefHeight="578.0" prefWidth="677.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="-17.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+          <Tab text="Expense">
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox prefHeight="79.0" prefWidth="617.0">
+                           <children>
+                              <JFXTextField fx:id="itemInput" labelFloat="true" promptText="Item Desc." HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </JFXTextField>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="79.0">
+                           <children>
+                              <JFXDatePicker fx:id="tranDateInput" prefHeight="25.0" prefWidth="252.0" promptText="Trans. date" style="-fx-font-size: 15px;" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="79.0">
+                           <children>
+                              <JFXTextField fx:id="amountInput" labelFloat="true" prefHeight="25.0" prefWidth="273.0" promptText="Amount">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </JFXTextField>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="59.0" prefWidth="617.0">
+                           <children>
+                              <JFXButton onAction="#addBtn" style="-fx-background-color: #D5D5D5;" text="Add">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </JFXButton>
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </Tab>
+          <Tab text="Income">
+               <content>
+                  <VBox prefHeight="506.0" prefWidth="677.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="79.0" prefWidth="677.0">
+                           <children>
+                              <JFXTextField fx:id="customerF" labelFloat="true" prefHeight="25.0" prefWidth="492.0" promptText="Customer name" HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </JFXTextField>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="79.0" prefWidth="677.0">
+                           <children>
+                              <JFXTextField fx:id="addressF" labelFloat="true" promptText="Address" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font></JFXTextField>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="89.0" prefHeight="79.0" prefWidth="677.0">
+                           <children>
+                              <JFXTextField fx:id="telephoneF" labelFloat="true" prefHeight="25.0" prefWidth="340.0" promptText="Telephone">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font></JFXTextField>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="168.0" prefHeight="79.0" prefWidth="677.0">
+                           <children>
+                              <JFXTextField fx:id="descriptionF" labelFloat="true" promptText="Description" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font></JFXTextField>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="247.0" prefHeight="79.0" prefWidth="677.0">
+                           <children>
+                              <JFXTextField fx:id="amountF" labelFloat="true" prefHeight="25.0" prefWidth="266.0" promptText="Amount">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font></JFXTextField>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" layoutX="30.0" layoutY="346.0" prefHeight="79.0" prefWidth="677.0" spacing="20.0">
+                           <children>
+                              <JFXDatePicker fx:id="dateF" prefHeight="25.0" prefWidth="211.0" promptText="Date" style="-fx-font-size: 15;" />
+                              <JFXDatePicker fx:id="dueDateF" promptText="Due date" style="-fx-font-size: 15;" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="75.0" prefWidth="637.0" spacing="10.0">
+                           <children>
+                              <Label text="Quauntity">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Spinner fx:id="quantityF" editable="true" />
+                           </children>
+                        </HBox>
+                        <VBox prefHeight="104.0" prefWidth="637.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="(Optional)">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Text>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="If service rendered to customer relate to internet installation calculate your VAT here.">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Text>
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                                 <children>
+                                    <JFXButton onAction="#vatCalculator" style="-fx-background-color: blue;" text="Calculate VAT" textFill="WHITE" />
+                                    <JFXCheckBox fx:id="vatChecker" onAction="#vatInclude" text="include VAT" />
+                                 </children>
+                              </HBox>
+                              <Text fx:id="vatText" strokeType="OUTSIDE" strokeWidth="0.0" text="Vat value" visible="false">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </VBox>
+                        <HBox alignment="CENTER_RIGHT" layoutX="30.0" layoutY="425.0" prefHeight="79.0" prefWidth="677.0">
+                           <children>
+                              <JFXButton onAction="#recordAction" style="-fx-background-color: D4D4D4;" text="Record">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </JFXButton>
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>
