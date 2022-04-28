@@ -180,7 +180,7 @@ public class ReportCreator {
                 Cell cellA4 = row2.createCell(3);
                 cellA4.setCellValue(rsOther2Query.getString("description"));
                 Cell cellA5 = row2.createCell(4);
-                cellA5.setCellValue(Integer.parseInt(rsOther2Query.getString("amount")));
+                cellA5.setCellValue(Double.parseDouble(rsOther2Query.getString("amount")));
                 Cell cellA9 = row2.createCell(5);
                 cellA9.setCellValue(Integer.parseInt(rsOther2Query.getString("quantity")));
                 Cell cellA6 = row2.createCell(6);

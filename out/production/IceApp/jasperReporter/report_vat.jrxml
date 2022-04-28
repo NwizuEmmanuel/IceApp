@@ -2,18 +2,17 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report_vat" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="476839eb-ba15-46aa-916d-28b6b296993b">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="313"/>
+	<property name="ireport.y" value="233"/>
 	<queryString>
-		<![CDATA[select customer,address,amount,telephone,description,
-quantity,vat,due_date,sum(vat)as total_vat from other_data2 group by id]]>
+		<![CDATA[select * from printer_table]]>
 	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="customer" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="address" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="amount" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="telephone" class="java.lang.String">
@@ -22,7 +21,13 @@ quantity,vat,due_date,sum(vat)as total_vat from other_data2 group by id]]>
 	<field name="description" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="amount" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="quantity" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tran_date" class="java.sql.Date">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="vat" class="java.lang.String">
@@ -31,7 +36,9 @@ quantity,vat,due_date,sum(vat)as total_vat from other_data2 group by id]]>
 	<field name="due_date" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="total_vat" class="java.lang.Double"/>
+	<field name="total_vat" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<title>
 		<band height="152" splitType="Stretch">
 			<image>

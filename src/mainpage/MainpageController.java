@@ -125,23 +125,23 @@ public class MainpageController implements Initializable {
     @FXML
     private AnchorPane root;
     @FXML
-    private TableColumn<Other2Model, String>customerCol;
+    private TableColumn<Other2Model, String> customerCol;
     @FXML
-    private TableColumn<Other2Model, String>addressCol;
+    private TableColumn<Other2Model, String> addressCol;
     @FXML
-    private TableColumn<Other2Model, String>telephoneCol;
+    private TableColumn<Other2Model, String> telephoneCol;
     @FXML
-    private TableColumn<Other2Model, String>descriptionCol;
+    private TableColumn<Other2Model, String> descriptionCol;
     @FXML
-    private TableColumn<Other2Model, String>amountCol;
+    private TableColumn<Other2Model, String> amountCol;
     @FXML
-    private TableColumn<Other2Model, String>dateCol;
+    private TableColumn<Other2Model, String> dateCol;
     @FXML
-    private TableColumn<Other2Model, String>dueDateCol;
+    private TableColumn<Other2Model, String> dueDateCol;
     @FXML
-    private TableColumn<Other2Model, String>vatCol;
+    private TableColumn<Other2Model, String> vatCol;
     @FXML
-    private TableColumn<Other2Model, String>quantityCol;
+    private TableColumn<Other2Model, String> quantityCol;
     @FXML
     private TableView<Other2Model> other2TableView;
     @FXML
@@ -166,7 +166,7 @@ public class MainpageController implements Initializable {
     static Prefs prefsClass = new Prefs();
     static Preferences preferences = Preferences.userRoot().node(prefsClass.getClass().getName());
 
-    String sqlRestrict = "alter table "+DatabaseActions.dummyTable+" modify dummy_text text not null";
+    String sqlRestrict = "alter table " + DatabaseActions.dummyTable + " modify dummy_text text not null";
 
     private void hideCircleIndicators() {
         circle_1.setVisible(false);
@@ -198,17 +198,32 @@ public class MainpageController implements Initializable {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
         stage.setScene(scene);
-        stage.setOnCloseRequest(e->{
-//            String sql = "delete from "+DatabaseActions.printerTable+" where id>=0";
-//            try {
-//                PreparedStatement preparedStatement = DatabaseActions.connectToDB().prepareStatement(sql);
-//                preparedStatement.execute();
-//            } catch (SQLException ex) {
-//                ex.printStackTrace();
-//            }
-        });
         stage.showAndWait();
         refresh();
+    }
+
+    private void printerCleaner(){
+        String sql = "delete from " + DatabaseActions.printerTable + " where id>=0";
+        try {
+            PreparedStatement preparedStatement = DatabaseActions.connectToDB().prepareStatement(sql);
+            preparedStatement.execute();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void printListener() throws IOException {
+        printerCleaner();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/printer/printer.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(loader.load());
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setOnCloseRequest(e -> {
+            printerCleaner();
+        });
+        stage.setScene(scene);
+        stage.show();
     }
 
     @FXML
@@ -285,6 +300,7 @@ public class MainpageController implements Initializable {
         // default browser
         desk.browse(new URI("https://nwizuemmanuel200.medium.com/ice-management-app-ice-ma-93f2436265d4"));
     }
+
     @FXML
     private void onHover_child_4() {
         report_child.setStyle("-fx-background-color: white");
@@ -297,7 +313,7 @@ public class MainpageController implements Initializable {
 
     @FXML
     private void onPress_child_4() throws IOException {
-        try{
+        try {
             PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sqlRestrict);
             ps.execute();
             report_child.setStyle("-fx-background-color: #A6A6A6;");
@@ -309,16 +325,16 @@ public class MainpageController implements Initializable {
             stage.setTitle("Reports");
             stage.setResizable(false);
             stage.show();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             DisplayError.showErrorAlert(GlobalVariables.privilegeMsg2);
         }
     }
 
     private void showFirstPage() {
-        if(dashboard_page.isVisible()){
+        if (dashboard_page.isVisible()) {
             circle_1.setVisible(true);
             dashboard_page.toFront();
-        }else {
+        } else {
             dashboard_page.setVisible(false);
             dashboard_page.setManaged(false);
             dashboard_child.setVisible(false);
@@ -337,27 +353,27 @@ public class MainpageController implements Initializable {
 
     @FXML
     private void othersSearchQuery() throws SQLException {
-        if(tabPane.getSelectionModel().getSelectedItem().getText().equals(incomeTab.getText())){
-            DatabaseActions.other2SearchQuery(otherSearchBar.getText(),other2TableView);
-        }else if(tabPane.getSelectionModel().getSelectedItem().getText().equals(expenseTab.getText())){
+        if (tabPane.getSelectionModel().getSelectedItem().getText().equals(incomeTab.getText())) {
+            DatabaseActions.other2SearchQuery(otherSearchBar.getText(), other2TableView);
+        } else if (tabPane.getSelectionModel().getSelectedItem().getText().equals(expenseTab.getText())) {
             DatabaseActions da = new DatabaseActions();
             da.othersSearchQuery(otherSearchBar.getText(), othersTable);
         }
     }
 
     @FXML
-    private void newDGV()throws IOException {
-        try{
-                PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sqlRestrict);
-                ps.execute();
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/new_dgv/new_dgv.fxml"));
-                Stage stage = new Stage();
-                stage.setTitle("Create new sheet or Data group value");
-                stage.setScene(new Scene(loader.load()));
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
-                stage.setResizable(false);
-                stage.showAndWait();
+    private void newDGV() throws IOException {
+        try {
+            PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sqlRestrict);
+            ps.execute();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/new_dgv/new_dgv.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Create new sheet or Data group value");
+            stage.setScene(new Scene(loader.load()));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
+            stage.setResizable(false);
+            stage.showAndWait();
             try {
                 refresh();
                 FXMLLoader loader1 = new FXMLLoader(getClass().getResource("/mainpage/mainpage.fxml"));
@@ -366,7 +382,7 @@ public class MainpageController implements Initializable {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }catch (SQLException ex){
+        } catch (SQLException ex) {
             DisplayError.showErrorAlert(GlobalVariables.privilegeMsg2);
         }
     }
@@ -393,9 +409,9 @@ public class MainpageController implements Initializable {
         alert.setTitle("Confirm");
         ButtonType yesBtn = new ButtonType("Yes");
         ButtonType noBtn = new ButtonType("No");
-        alert.getButtonTypes().setAll(yesBtn,noBtn);
+        alert.getButtonTypes().setAll(yesBtn, noBtn);
         Optional<ButtonType> result = alert.showAndWait();
-        if(result.isPresent() && result.get() == yesBtn){
+        if (result.isPresent() && result.get() == yesBtn) {
             preferences.remove(PrefKeys.userKey);
             preferences.remove(PrefKeys.passKey);
             root.getScene().getWindow().hide();
@@ -406,24 +422,24 @@ public class MainpageController implements Initializable {
             Scene scene = new Scene(loader.load());
             stage.setScene(scene);
             stage.show();
-        }else {
+        } else {
             alert.close();
         }
     }
 
-    private void checkDGV(){
-        String sql = "select count(dgv) from "+DatabaseActions.tableNameForDGV+"";
+    private void checkDGV() {
+        String sql = "select count(dgv) from " + DatabaseActions.tableNameForDGV + "";
         int num = 0;
         try {
             Statement statement = DatabaseActions.connectToDB().createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 num = resultSet.getInt("count(dgv)");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if((preferences.get(PrefKeys.dgvKey,"").isEmpty() || num == 0) && GlobalVariables.isAdmin){
+        if ((preferences.get(PrefKeys.dgvKey, "").isEmpty() || num == 0) && GlobalVariables.isAdmin) {
             intern_child.setVisible(false);
             others_child.setVisible(false);
             intern_child.setManaged(false);
@@ -435,10 +451,10 @@ public class MainpageController implements Initializable {
         }
     }
 
-    private void adminChecker2(){
+    private void adminChecker2() {
         newBtn.setVisible(false);
         newBtn.setManaged(false);
-        String sql = "alter table "+DatabaseActions.dummyTable+" modify dummy_text text not null";
+        String sql = "alter table " + DatabaseActions.dummyTable + " modify dummy_text text not null";
         try {
             PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sql);
             ps.execute();
@@ -465,7 +481,7 @@ public class MainpageController implements Initializable {
         checkDGV();
     }
 
-    private void displayOther2Data(){
+    private void displayOther2Data() {
         try {
             DatabaseActions.generateOther2Data(other2TableView);
             customerCol.setCellValueFactory(new PropertyValueFactory<>("customer"));
@@ -534,11 +550,11 @@ public class MainpageController implements Initializable {
         DatabaseActions da = new DatabaseActions();
         try {
             if (newValue.toString().matches("[a-zA-Z ]+")) {
-                if(newValue.toString().equals("delete")){
-                    String sql = "delete from "+DatabaseActions.tableNameForIntern+" where id="+im.getId()+" ";
+                if (newValue.toString().equals("delete")) {
+                    String sql = "delete from " + DatabaseActions.tableNameForIntern + " where id=" + im.getId() + " ";
                     PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sql);
                     ps.execute();
-                }else {
+                } else {
                     da.internUpdater("fullname", "id", newValue.toString(), String.valueOf(im.getId()));
                 }
             } else {
@@ -555,7 +571,7 @@ public class MainpageController implements Initializable {
         Object newValue = event.getNewValue();
         InternModel im = internTable.getSelectionModel().getSelectedItem();
         DatabaseActions da = new DatabaseActions();
-        String query = "select amount from " +DatabaseActions.tableNameForIntern+ " where id=" + im.getId() + "";
+        String query = "select amount from " + DatabaseActions.tableNameForIntern + " where id=" + im.getId() + "";
         Statement statement = DatabaseActions.connectToDB().createStatement();
         ResultSet rs = statement.executeQuery(query);
         double initialAmount = 0;
@@ -602,12 +618,12 @@ public class MainpageController implements Initializable {
     private void other2_customerEditCommit(CellEditEvent<Other2Model, String> event) throws SQLException {
         Object newValue = event.getNewValue();
         Other2Model other2Model = other2TableView.getSelectionModel().getSelectedItem();
-        if(newValue.toString().equals("delete")){
-            String sql = "delete from "+DatabaseActions.tableNameForOthers2+" where id="+other2Model.getId()+" ";
+        if (newValue.toString().equals("delete")) {
+            String sql = "delete from " + DatabaseActions.tableNameForOthers2 + " where id=" + other2Model.getId() + " ";
             PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sql);
             ps.execute();
-        }else {
-            String query = "update "+DatabaseActions.tableNameForOthers2+" set customer='"+newValue+"' where id="+other2Model.getId()+"";
+        } else {
+            String query = "update " + DatabaseActions.tableNameForOthers2 + " set customer='" + newValue + "' where id=" + other2Model.getId() + "";
             PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(query);
             ps.executeUpdate();
         }
@@ -618,7 +634,7 @@ public class MainpageController implements Initializable {
     private void other2_addressEditCommit(CellEditEvent<Other2Model, String> event) throws SQLException {
         Object newValue = event.getNewValue();
         Other2Model other2Model = other2TableView.getSelectionModel().getSelectedItem();
-        String query = "update "+DatabaseActions.tableNameForOthers2+" set address='"+newValue+"' where id="+other2Model.getId()+"";
+        String query = "update " + DatabaseActions.tableNameForOthers2 + " set address='" + newValue + "' where id=" + other2Model.getId() + "";
         PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(query);
         ps.executeUpdate();
         displayOther2Data();
@@ -628,11 +644,11 @@ public class MainpageController implements Initializable {
     private void other2_telephoneEditCommit(CellEditEvent<Other2Model, String> event) throws SQLException {
         Object newValue = event.getNewValue();
         Other2Model other2Model = other2TableView.getSelectionModel().getSelectedItem();
-        if(newValue.toString().matches("[0-9]{11}")){
-            String query = "update "+DatabaseActions.tableNameForOthers2+" set telephone='"+newValue+"' where id="+other2Model.getId()+"";
+        if (newValue.toString().matches("[0-9]{11}")) {
+            String query = "update " + DatabaseActions.tableNameForOthers2 + " set telephone='" + newValue + "' where id=" + other2Model.getId() + "";
             PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(query);
             ps.executeUpdate();
-        }else {
+        } else {
             DisplayError.showErrorAlert("Telephone number format invalid");
         }
         displayOther2Data();
@@ -642,7 +658,7 @@ public class MainpageController implements Initializable {
     private void other2_descEditCommit(CellEditEvent<Other2Model, String> event) throws SQLException {
         Object newValue = event.getNewValue();
         Other2Model other2Model = other2TableView.getSelectionModel().getSelectedItem();
-        String query = "update "+DatabaseActions.tableNameForOthers2+" set description='"+newValue+"' where id="+other2Model.getId()+"";
+        String query = "update " + DatabaseActions.tableNameForOthers2 + " set description='" + newValue + "' where id=" + other2Model.getId() + "";
         PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(query);
         ps.executeUpdate();
         displayOther2Data();
@@ -652,7 +668,7 @@ public class MainpageController implements Initializable {
     private void other2_quantityEditCommit(CellEditEvent<Other2Model, String> event) throws SQLException {
         Object newValue = event.getNewValue();
         Other2Model other2Model = other2TableView.getSelectionModel().getSelectedItem();
-        String query = "update "+DatabaseActions.tableNameForOthers2+" set description='"+newValue+"' where id="+other2Model.getId()+"";
+        String query = "update " + DatabaseActions.tableNameForOthers2 + " set description='" + newValue + "' where id=" + other2Model.getId() + "";
         PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(query);
         ps.executeUpdate();
         displayOther2Data();
@@ -662,7 +678,7 @@ public class MainpageController implements Initializable {
     private void other2_amountOnEditCommit(CellEditEvent<Other2Model, String> event) throws SQLException {
         Object newValue = event.getNewValue();
         Other2Model im = other2TableView.getSelectionModel().getSelectedItem();
-        String query = "select amount from " +DatabaseActions.tableNameForOthers2+ " where id=" + im.getId() + "";
+        String query = "select amount from " + DatabaseActions.tableNameForOthers2 + " where id=" + im.getId() + "";
         Statement statement = DatabaseActions.connectToDB().createStatement();
         ResultSet rs = statement.executeQuery(query);
         int initialAmount = 0;
@@ -672,7 +688,7 @@ public class MainpageController implements Initializable {
         if (newValue.toString().matches("[0-9]+")) {
             try {
                 int result = initialAmount + Integer.parseInt(newValue.toString());
-                String query2 = "update "+DatabaseActions.tableNameForOthers2+" set amount='"+ result +"' where id="+im.getId()+"";
+                String query2 = "update " + DatabaseActions.tableNameForOthers2 + " set amount='" + result + "' where id=" + im.getId() + "";
                 PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(query2);
                 ps.executeUpdate();
             } catch (NumberFormatException | SQLException e) {
@@ -680,7 +696,7 @@ public class MainpageController implements Initializable {
             }
         } else if (newValue.toString().contains("clear")) {
             try {
-                String query3 = "update "+DatabaseActions.tableNameForOthers2+" set amount='0' where id="+im.getId()+"";
+                String query3 = "update " + DatabaseActions.tableNameForOthers2 + " set amount='0' where id=" + im.getId() + "";
                 PreparedStatement ps1 = DatabaseActions.connectToDB().prepareStatement(query3);
                 ps1.executeUpdate();
             } catch (SQLException ex) {
@@ -759,7 +775,7 @@ public class MainpageController implements Initializable {
 
     @FXML
     private void courseSettingAction() throws IOException {
-        try{
+        try {
             PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sqlRestrict);
             ps.execute();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/course_setting/course_setting.fxml"));
@@ -769,7 +785,7 @@ public class MainpageController implements Initializable {
             stage.getIcons().add(new Image(Objects.requireNonNull(MainpageController.class.getResourceAsStream("/assets/Ice Logo.png"))));
             stage.setScene(scene);
             stage.show();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             DisplayError.showErrorAlert(GlobalVariables.privilegeMsg2);
         }
     }
@@ -777,12 +793,12 @@ public class MainpageController implements Initializable {
     private void loadCashFlowPie() {
         try {
             Statement statement = DatabaseActions.connectToDB().createStatement();
-            String commandForIncome = "SELECT sum(amount) FROM " + DatabaseActions.tableNameForOthers2 +" "
-                    +"where data_group_value ='"+preferences.get(PrefKeys.dgvKey,"")+"' ";
+            String commandForIncome = "SELECT sum(amount) FROM " + DatabaseActions.tableNameForOthers2 + " "
+                    + "where data_group_value ='" + preferences.get(PrefKeys.dgvKey, "") + "' ";
             String commandForExpense = "SELECT sum(amount) FROM " + DatabaseActions.tableNameForOthers + " " +
-                    "where data_group_value ='"+preferences.get(PrefKeys.dgvKey,"")+"' ";
-            String commandForInternFees= "select sum(amount) from "+DatabaseActions.tableNameForIntern+" where " +
-                    "data_group_value ='"+preferences.get(PrefKeys.dgvKey,"")+"' ";
+                    "where data_group_value ='" + preferences.get(PrefKeys.dgvKey, "") + "' ";
+            String commandForInternFees = "select sum(amount) from " + DatabaseActions.tableNameForIntern + " where " +
+                    "data_group_value ='" + preferences.get(PrefKeys.dgvKey, "") + "' ";
 
             int incomeCount = 0;
             int expenseCount = 0;
@@ -803,21 +819,21 @@ public class MainpageController implements Initializable {
                 expenseCount = rsExpense.getInt("sum(amount)");
             }
             rsInternFee = statement.executeQuery(commandForInternFees);
-            while (rsInternFee.next()){
+            while (rsInternFee.next()) {
                 internFeeCount = rsInternFee.getInt("sum(amount)");
             }
             totalIncome = incomeCount + internFeeCount;
-            if(totalIncome > expenseCount){
+            if (totalIncome > expenseCount) {
                 balance = totalIncome - expenseCount;
-            }else {
+            } else {
                 balance = expenseCount - totalIncome;
             }
             balanceText.setText("Balance: ₦" + numberFormat.format(balance));
             incomeText.setText("Income: ₦" + numberFormat.format(totalIncome));
             expenseText.setText("Expense: ₦" + numberFormat.format(expenseCount));
-            if(totalIncome <=0 || expenseCount <=0){
+            if (totalIncome <= 0 || expenseCount <= 0) {
                 dashboardPane.toFront();
-            }else {
+            } else {
                 dashboardPane.toBack();
             }
 
@@ -837,8 +853,8 @@ public class MainpageController implements Initializable {
         loadCashFlowPie();
     }
 
-    private void restrictions(){
-        if(!GlobalVariables.isAdmin){
+    private void restrictions() {
+        if (!GlobalVariables.isAdmin) {
             report_child.setVisible(false);
             report_child.setManaged(false);
             newBtn.setVisible(false);

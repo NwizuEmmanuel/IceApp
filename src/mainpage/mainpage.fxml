@@ -404,6 +404,17 @@
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </JFXButton>
+                                    <JFXButton focusTraversable="false" onAction="#printListener" prefHeight="58.0" prefWidth="144.0" text="Print">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <graphic>
+                                          <FontAwesomeIconView glyphName="PRINT" size="25" />
+                                       </graphic>
+                                    </JFXButton>
                                  </children>
                                  <padding>
                                     <Insets bottom="15.0" left="5.0" right="5.0" top="5.0" />

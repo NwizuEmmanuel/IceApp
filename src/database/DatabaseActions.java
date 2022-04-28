@@ -29,7 +29,6 @@ import java.util.Objects;
 import java.util.prefs.Preferences;
 
 public class DatabaseActions {
-
     static Prefs prefClass = new Prefs();
     static Preferences pref = Preferences.userRoot().node(prefClass.getClass().getName());
     static final String ipAddress = pref.get(PrefKeys.ipKey, "");
@@ -42,6 +41,7 @@ public class DatabaseActions {
     public static String tableNameForDGV = "dgv"; // dgv = data value group
     public static String dummyTable = "dummy_table";
     public static String printerTable = "printer_table";
+    public static String printerTable2 = "printer_table2";
 
     static public Connection connectToDB() {
         Connection connection = null;
@@ -106,8 +106,7 @@ public class DatabaseActions {
     
     public static void addOther2Data(String customer,String address,String telephone,String desc,String amount,String date,boolean isIncluded,String dueDate,
                                      int quantity) throws SQLException {
-        NumberFormat nf = NumberFormat.getInstance();
-        Double total_amount = Double.parseDouble(amount) * quantity;
+        double total_amount = Double.parseDouble(amount) * quantity;
         if(isIncluded){
             String sql = "insert into "+tableNameForOthers2+"(customer,address,telephone,description,amount,tran_date,data_group_value,vat,due_date,quantity)values(?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement ps = connectToDB().prepareStatement(sql);
@@ -115,29 +114,14 @@ public class DatabaseActions {
             ps.setString(2,address);
             ps.setString(3,telephone);
             ps.setString(4,desc);
-            ps.setString(5,nf.format(total_amount));
+            ps.setString(5, Double.toString(total_amount));
             ps.setDate(6, Date.valueOf(date));
             ps.setString(7,pref.get(PrefKeys.dgvKey,""));
             double totalVat = Double.parseDouble(Add_recordController.pubVat) * quantity;
-            ps.setString(8, nf.format(totalVat));
+            ps.setString(8, String.valueOf(totalVat));
             ps.setString(9,dueDate);
             ps.setInt(10,quantity);
             ps.executeUpdate();
-
-            String sql1 = "insert into "+printerTable+"(customer,address,telephone,description,amount,tran_date,data_group_value,vat,due_date,quantity)values(?,?,?,?,?,?,?,?,?,?)";
-            PreparedStatement ps1 = connectToDB().prepareStatement(sql1);
-            ps1.setString(1,customer);
-            ps1.setString(2,address);
-            ps1.setString(3,telephone);
-            ps1.setString(4,desc);
-            ps1.setString(5,String.valueOf(total_amount));
-            ps1.setDate(6, Date.valueOf(date));
-            ps1.setString(7,pref.get(PrefKeys.dgvKey,""));
-            double totalVat1 = Double.parseDouble(Add_recordController.pubVat) * quantity;
-            ps1.setString(8, nf.format(totalVat1));
-            ps1.setString(9,dueDate);
-            ps1.setInt(10,quantity);
-            ps1.executeUpdate();
         }else {
             String sql = "insert into "+tableNameForOthers2+"(customer,address,telephone,description,amount,tran_date,data_group_value,due_date,quantity)values(?,?,?,?,?,?,?,?,?)";
             PreparedStatement ps = connectToDB().prepareStatement(sql);
@@ -145,46 +129,28 @@ public class DatabaseActions {
             ps.setString(2,address);
             ps.setString(3,telephone);
             ps.setString(4,desc);
-            ps.setString(5,nf.format(total_amount));
+            ps.setString(5, Double.toString(total_amount));
             ps.setDate(6, Date.valueOf(date));
             ps.setString(7,pref.get(PrefKeys.dgvKey,""));
             ps.setString(8,dueDate);
             ps.setInt(9,quantity);
             ps.executeUpdate();
-
-            String sql1 = "insert into "+printerTable+"(customer,address,telephone,description,amount,tran_date,data_group_value,due_date,quantity)values(?,?,?,?,?,?,?,?,?)";
-            PreparedStatement ps1 = connectToDB().prepareStatement(sql1);
-            ps1.setString(1,customer);
-            ps1.setString(2,address);
-            ps1.setString(3,telephone);
-            ps1.setString(4,desc);
-            ps1.setString(5,nf.format(total_amount));
-            ps1.setDate(6, Date.valueOf(date));
-            ps1.setString(7,pref.get(PrefKeys.dgvKey,""));
-            ps1.setString(8,dueDate);
-            ps1.setInt(9,quantity);
-            ps1.executeUpdate();
         }
-        printerTableExtra();
     }
-    static public void printerTableExtra() throws SQLException {
-        String total_amount = "";
-        String total_vat = "";
-        String sql1 = "select sum(vat) from "+DatabaseActions.printerTable+"";
-        String sql2 = "select sum(amount) from "+DatabaseActions.printerTable+"";
+    static public void dummyPrinterTable1(String customer) throws SQLException {
+        NumberFormat nf = NumberFormat.getInstance();
+        String total_vat = null;
+        String sql1 = "select sum(vat) from "+DatabaseActions.printerTable+" where customer='"+customer+"'";
         Statement statement1 = DatabaseActions.connectToDB().createStatement();
-        Statement statement2 = DatabaseActions.connectToDB().createStatement();
         ResultSet resultSet1 = statement1.executeQuery(sql1);
         while(resultSet1.next()){
-            total_vat=resultSet1.getString("vat");
+            total_vat=resultSet1.getString("sum(vat)").replace(",","");
         }
+        assert total_vat != null;
+        int total_vat1 = Integer.parseInt(total_vat);
+        String main_total_vat = nf.format(total_vat1);
         resultSet1.close();
-        ResultSet resultSet2 = statement2.executeQuery(sql2);
-        while(resultSet2.next()){
-            total_amount = resultSet2.getString("amount");
-        }
-        resultSet2.close();
-        String query1 = "update "+printerTable+" set total_vat='"+total_vat+"',total_amount='"+total_amount+"' where 1";
+        String query1 = "update "+printerTable+" set total_vat='"+main_total_vat+"' where 1";
         PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(query1);
         ps.execute();
     }
@@ -194,10 +160,11 @@ public class DatabaseActions {
         String sqlQuery = "select * from "+tableNameForOthers2+"";
         Statement statement = connectToDB().createStatement();
         ResultSet resultSet = statement.executeQuery(sqlQuery);
+        NumberFormat nf = NumberFormat.getInstance();
         while (resultSet.next()){
             data.add(new Other2Model(resultSet.getInt("id"),resultSet.getString("customer"),resultSet.getString("address"),
                     resultSet.getString("telephone"),resultSet.getString("description"),
-                    resultSet.getString("amount"),resultSet.getString("tran_date"),resultSet.getString("due_date"),resultSet.getString("vat"),
+                    nf.format(resultSet.getInt("amount")),resultSet.getString("tran_date"),resultSet.getString("due_date"),nf.format(resultSet.getInt("vat")),
                     resultSet.getInt("quantity")));
         }
         tableView.setItems(data);
@@ -306,6 +273,38 @@ public class DatabaseActions {
         tableView.setItems(data);
     }
 
+    public static void other2VatDataGenerator(String str, TableView<Other2Model> tableView) throws SQLException {
+        tableView.getItems().clear();
+        String sql = "select * from "+tableNameForOthers2+" where customer like '%"+str+"%' and vat>0";
+        ObservableList<Other2Model> data = FXCollections.observableArrayList();
+        Statement statement = connectToDB().createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+        while (resultSet.next()){
+            data.add(new Other2Model(resultSet.getInt("id"),resultSet.getString("customer"),resultSet.getString("address"),
+                    resultSet.getString("telephone"),resultSet.getString("description"),
+                    resultSet.getString("amount"),resultSet.getString("tran_date"),
+                    resultSet.getString("due_date"),resultSet.getString("vat"),
+                    resultSet.getInt("quantity")));
+        }
+        tableView.setItems(data);
+    }
+
+    public static void Other2CommonDataGenerator(String str, TableView<DummyOther2> tv) throws SQLException {
+        tv.getItems().clear();
+        String sql = "select * from "+tableNameForOthers2+" where customer like '%"+str+"%' and vat<=0";
+        ObservableList<DummyOther2> data = FXCollections.observableArrayList();
+        Statement statement = connectToDB().createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+        while (resultSet.next()){
+            data.add(new DummyOther2(resultSet.getInt("id"),resultSet.getString("customer"),resultSet.getString("address"),
+                    resultSet.getString("telephone"),resultSet.getString("description"),
+                    resultSet.getString("amount"),resultSet.getString("tran_date"),
+                    resultSet.getString("due_date"),
+                    resultSet.getInt("quantity")));
+        }
+        tv.setItems(data);
+    }
+
     public void loadCoursePriceData(TableView<CoursePriceModel> tableView) throws SQLException {
         String query = "select * from "+ tableNameForCoursePrice +"";
         ObservableList<CoursePriceModel> data = FXCollections.observableArrayList();
@@ -354,12 +353,12 @@ public class DatabaseActions {
                 "amount text not null," +
                 "quantity int not null,"+
                 "tran_date date not null," +
-                "vat text null,"+
+                "vat int default 0,"+
                 "due_date text null,"+
                 "data_group_value text not null," +
                 "primary key(id))";
         String query8 = "create table if not exists "+printerTable+" (" +
-                "id int auto_increment,"+
+                "id int not null,"+
                 "customer text not null," +
                 "address text not null," +
                 "telephone varchar(11) not null," +
@@ -370,8 +369,18 @@ public class DatabaseActions {
                 "vat text null,"+
                 "due_date text null,"+
                 "total_vat text not null default '0',"+
+                "primary key(id))";
+        String query9 = "create table if not exists "+printerTable2+" (" +
+                "id int not null,"+
+                "customer text not null," +
+                "address text not null," +
+                "telephone varchar(11) not null," +
+                "description text not null," +
+                "amount text not null," +
+                "quantity int not null,"+
+                "tran_date date not null," +
+                "due_date text null,"+
                 "total_amount text not null default '0',"+
-                "data_group_value text not null," +
                 "primary key(id))";
         try {
             PreparedStatement ps2 = connectToDB().prepareStatement(query2);
@@ -381,6 +390,7 @@ public class DatabaseActions {
             PreparedStatement ps6 = connectToDB().prepareStatement(query6);
             PreparedStatement ps7 = connectToDB().prepareStatement(query7);
             PreparedStatement ps8 = connectToDB().prepareStatement(query8);
+            PreparedStatement ps9 = connectToDB().prepareStatement(query9);
             ps2.execute();
             ps3.execute();
             ps4.execute();
@@ -388,6 +398,7 @@ public class DatabaseActions {
             ps6.execute();
             ps7.execute();
             ps8.execute();
+            ps9.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }

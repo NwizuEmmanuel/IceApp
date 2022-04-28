@@ -2,9 +2,9 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report_vat" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="476839eb-ba15-46aa-916d-28b6b296993b">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="233"/>
+	<property name="ireport.y" value="313"/>
 	<queryString>
-		<![CDATA[select * from printer_table]]>
+		<![CDATA[select * from printer_table2]]>
 	</queryString>
 	<field name="id" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -30,13 +30,10 @@
 	<field name="tran_date" class="java.sql.Date">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="vat" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
 	<field name="due_date" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="total_vat" class="java.lang.String">
+	<field name="total_amount" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<title>
@@ -271,13 +268,6 @@
 				</textElement>
 				<text><![CDATA[QUANTITY]]></text>
 			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="406" y="17" width="100" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="4acd07da-0079-4053-9c99-378e4c53c1b2"/>
-				<textElement textAlignment="Center">
-					<font size="14" isBold="true"/>
-				</textElement>
-				<text><![CDATA[VAT]]></text>
-			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -303,13 +293,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="406" y="0" width="100" height="20" uuid="18662c14-ee76-433b-8893-7aaa76e4eef3"/>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="14" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{vat}]]></textFieldExpression>
-			</textField>
 		</band>
 	</detail>
 	<columnFooter>
@@ -325,7 +308,7 @@
 				<textElement verticalAlignment="Middle" markup="none">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{total_vat}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_amount}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement mode="Opaque" x="290" y="3" width="130" height="34" forecolor="#FFFFFF" backcolor="#000000" uuid="954942d7-f41d-4428-9748-e18dc07e82bd"/>
@@ -333,7 +316,7 @@
 					<font size="14" isBold="true"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<text><![CDATA[SUB TOTAL(VAT)]]></text>
+				<text><![CDATA[TOTAL AMOUNT]]></text>
 			</staticText>
 		</band>
 	</columnFooter>

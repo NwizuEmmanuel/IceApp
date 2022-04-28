@@ -50,6 +50,7 @@ public class IceApp extends Application {
             stage.show();
         }else {
             try {
+            	Class.forName("com.mysql.jdbc.Driver");
                 DriverManager.getConnection(DatabaseActions.DB_URL, prefs.get(PrefKeys.userKey, ""), prefs.get(PrefKeys.passKey, ""));
                 FXMLLoader lLoader = new FXMLLoader(getClass().getResource("/mainpage/mainpage.fxml"));
                 Scene scene = new Scene(lLoader.load());

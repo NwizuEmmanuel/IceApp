@@ -12,21 +12,26 @@ import java.sql.SQLException;
 
 public class InvoicePrinter {
     static JasperDesign jasperDesign;
+    static JRDesignQuery query;
     static public void printInvoice(String customer,int x) throws JRException {
-        String sql = "select * from "+DatabaseActions.tableNameForOthers2+" where customer='"+customer+"'";
+        String sql = "select * from "+DatabaseActions.printerTable+" where customer='"+customer+"'";
+        String sql1 = "select * from "+DatabaseActions.printerTable2+" where customer='"+customer+"'";
         if(x == 1){
             jasperDesign = JRXmlLoader.load("./src/jasperReporter/report_vat.jrxml");
+            query = new JRDesignQuery();
+            query.setText(sql);
+            jasperDesign.setQuery(query);
         }else if(x == 2){
-            jasperDesign = JRXmlLoader.load("./src/jasperReporter/");
+            jasperDesign = JRXmlLoader.load("./src/jasperReporter/report_other.jrxml");
+            query = new JRDesignQuery();
+            query.setText(sql1);
+            jasperDesign.setQuery(query);
         }
-        JRDesignQuery query = new JRDesignQuery();
-        query.setText(sql);
-        jasperDesign.setQuery(query);
 
         JasperReport report = JasperCompileManager.compileReport(jasperDesign);
         JasperPrint printer = JasperFillManager.fillReport(report,null, DatabaseActions.connectToDB());
 
-        JasperViewer.viewReport(printer);
+        JasperViewer.viewReport(printer,false);
     }
 
     public static void main(String[] args) throws JRException, SQLException, IOException {
