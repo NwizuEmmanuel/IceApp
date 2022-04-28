@@ -23,7 +23,7 @@ import java.sql.Statement;
 import java.text.NumberFormat;
 import java.util.ResourceBundle;
 
-public class PrinterController implements Initializable{
+public class PrinterController implements Initializable {
 
     @FXML
     private TextField textField;
@@ -100,16 +100,16 @@ public class PrinterController implements Initializable{
     @FXML
     private void selectAll1Power() throws SQLException {
         isSelectAllChecked1 = selectAll1.isSelected();
-        DatabaseActions.other2VatDataGenerator(customer,tableView);
+        DatabaseActions.other2VatDataGenerator(customer, tableView);
     }
 
     @FXML
     private void selectAll2Power() throws SQLException {
         isSelectAllChecked2 = selectAll2.isSelected();
-        DatabaseActions.Other2CommonDataGenerator(customer,tableView1);
+        DatabaseActions.Other2CommonDataGenerator(customer, tableView1);
     }
 
-    private void addDataToTableView1(){
+    private void addDataToTableView1() {
         actionCol.setCellFactory(actionCellFactory);
         vatCol.setCellValueFactory(new PropertyValueFactory<>("vat"));
         dueDateCol.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
@@ -121,7 +121,7 @@ public class PrinterController implements Initializable{
         addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
     }
 
-    private void addDataToTableView2(){
+    private void addDataToTableView2() {
         dueDateCol1.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
         dateCol1.setCellValueFactory(new PropertyValueFactory<>("date"));
         amountCol1.setCellValueFactory(new PropertyValueFactory<>("amount"));
@@ -134,49 +134,49 @@ public class PrinterController implements Initializable{
 
     @FXML
     private void clearText() {
-    	textField.clear();
+        textField.clear();
     }
 
     String customer = null;
 
     @FXML
     private void searchAction() throws SQLException {
-        String sql = "select customer from "+DatabaseActions.tableNameForOthers2+" where customer like '%"+textField.getText()+"%' group by customer";
+        String sql = "select customer from " + DatabaseActions.tableNameForOthers2 + " where customer like '%" + textField.getText() + "%' group by customer";
         Statement statement = DatabaseActions.connectToDB().createStatement();
         ResultSet rs = statement.executeQuery(sql);
         listView.getItems().clear();
-        while (rs.next()){
+        while (rs.next()) {
             listView.getItems().addAll(rs.getString("customer"));
         }
     }
 
     @FXML
     private void printer1() throws JRException {
-        InvoicePrinter.printInvoice(customer,1);
+        InvoicePrinter.printInvoice(customer, 1);
     }
 
     @FXML
     private void printer2() throws JRException {
-        InvoicePrinter.printInvoice(customer,2);
+        InvoicePrinter.printInvoice(customer, 2);
     }
 
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
+    @Override
+    public void initialize(URL arg0, ResourceBundle arg1) {
         addDataToTableView1();
         addDataToTableView2();
-		btn1.setTooltip(new Tooltip("Print"));
-		btn2.setTooltip(new Tooltip("Print"));
+        btn1.setTooltip(new Tooltip("Print"));
+        btn2.setTooltip(new Tooltip("Print"));
 
-		listView.setOnMouseClicked(e->{
-		    customer = listView.getSelectionModel().getSelectedItem();
+        listView.setOnMouseClicked(e -> {
+            customer = listView.getSelectionModel().getSelectedItem();
             try {
-                DatabaseActions.other2VatDataGenerator(customer,tableView);
-                DatabaseActions.Other2CommonDataGenerator(customer,tableView1);
+                DatabaseActions.other2VatDataGenerator(customer, tableView);
+                DatabaseActions.Other2CommonDataGenerator(customer, tableView1);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
         });
-	}
+    }
 
     Callback<TableColumn<DGVModel, String>, TableCell<Other2Model, String>> actionCellFactory = (param) -> {
 
@@ -193,57 +193,19 @@ public class PrinterController implements Initializable{
                 } else {
                     Other2Model model = tableView.getItems().get(getIndex());
                     CheckBox checkBox = new CheckBox();
-                    if(isSelectAllChecked1){
+                    if (isSelectAllChecked1) {
                         checkBox.setSelected(true);
-                    }else {
+                        selectPowerForVat(model);
+                    } else {
                         checkBox.setSelected(false);
+                        deSelectPowerForVat(model);
                     }
-                    checkBox.setOnAction(e->{
-                        if(checkBox.isSelected()){
-                            String sql = "insert into "+DatabaseActions.printerTable+"(customer,address,telephone,description," +
-                                    "amount,quantity,tran_date,vat,due_date,total_vat,id)values(?,?,?,?,?,?,?,?,?,?,?)";
-                            String sql2 = "select amount from "+DatabaseActions.tableNameForOthers2+" where id=" +
-                                    +model.getId()+"";
-                            NumberFormat nf = NumberFormat.getInstance();
-                            String amount1=null;
-                            try {
-                                Statement statement = DatabaseActions.connectToDB().createStatement();
-                                ResultSet resultSet = statement.executeQuery(sql2);
-                                while (resultSet.next()){
-                                    amount1 = nf.format(resultSet.getInt("amount"));
-                                }
-                            } catch (SQLException exception) {
-                                exception.printStackTrace();
-                            }
-                            try {
-                                PreparedStatement preparedStatement = DatabaseActions.connectToDB().prepareStatement(sql);
-                                preparedStatement.setString(1,model.getCustomer());
-                                preparedStatement.setString(2,model.getAddress());
-                                preparedStatement.setString(3,model.getTelephone());
-                                preparedStatement.setString(4,model.getDescription());
-                                double amount3 = Double.parseDouble(model.getAmount());
-                                preparedStatement.setString(5,nf.format(amount3));
-                                preparedStatement.setInt(6,model.getQuantity());
-                                preparedStatement.setString(7,model.getDate());
-                                double vat = Double.parseDouble(model.getVat());
-                                preparedStatement.setString(8,nf.format(vat));
-                                preparedStatement.setString(9,model.getDueDate());
-                                preparedStatement.setString(10,amount1);
-                                preparedStatement.setInt(11,model.getId());
-                                preparedStatement.execute();
-                                DatabaseActions.dummyPrinterTable1(customer);
-                            } catch (SQLException ex) {
-                                ex.printStackTrace();
-                            }
-                        }else {
+                    checkBox.setOnAction(e -> {
+                        if (checkBox.isSelected()) {
+                            selectPowerForVat(model);
+                        } else {
                             selectAll1.setSelected(false);
-                            String sql = "delete from "+DatabaseActions.printerTable+" where id="+model.getId()+"";
-                            try {
-                                PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sql);
-                                ps.execute();
-                            } catch (SQLException exception) {
-                                exception.printStackTrace();
-                            }
+                            deSelectPowerForVat(model);
                         }
                     });
                     setGraphic(checkBox);
@@ -268,55 +230,19 @@ public class PrinterController implements Initializable{
                 } else {
                     DummyOther2 model = tableView1.getItems().get(getIndex());
                     CheckBox checkBox = new CheckBox();
-                    if(isSelectAllChecked2){
+                    if (isSelectAllChecked2) {
                         checkBox.setSelected(true);
-                    }else {
+                        selectPowerForNonVat(model);
+                    } else {
                         checkBox.setSelected(false);
+                        deSelectPowerForNonVat(model);
                     }
-                    checkBox.setOnAction(e->{
-                        if(checkBox.isSelected()){
-                            String sql = "insert into "+DatabaseActions.printerTable2+"(customer,address,telephone,description," +
-                                    "amount,quantity,tran_date,due_date,total_amount,id)values(?,?,?,?,?,?,?,?,?,?)";
-                            String sql2 = "select amount from "+DatabaseActions.tableNameForOthers2+" where id=" +
-                                    +model.getId()+"";
-                            NumberFormat nf = NumberFormat.getInstance();
-                            String amount1=null;
-                            try {
-                                Statement statement = DatabaseActions.connectToDB().createStatement();
-                                ResultSet resultSet = statement.executeQuery(sql2);
-                                while (resultSet.next()){
-                                    amount1 = nf.format(resultSet.getInt("amount"));
-                                }
-                            } catch (SQLException exception) {
-                                exception.printStackTrace();
-                            }
-                            try {
-                                PreparedStatement preparedStatement = DatabaseActions.connectToDB().prepareStatement(sql);
-                                preparedStatement.setString(1,model.getCustomer());
-                                preparedStatement.setString(2,model.getAddress());
-                                preparedStatement.setString(3,model.getTelephone());
-                                preparedStatement.setString(4,model.getDescription());
-                                double amount3 = Double.parseDouble(model.getAmount());
-                                preparedStatement.setString(5,nf.format(amount3));
-                                preparedStatement.setInt(6,model.getQuantity());
-                                preparedStatement.setString(7,model.getDate());
-                                preparedStatement.setString(8,model.getDueDate());
-                                preparedStatement.setString(9,amount1);
-                                preparedStatement.setInt(10,model.getId());
-                                preparedStatement.execute();
-                                DatabaseActions.dummyPrinterTable2(customer);
-                            } catch (SQLException ex) {
-                                ex.printStackTrace();
-                            }
-                        }else {
+                    checkBox.setOnAction(e -> {
+                        if (checkBox.isSelected()) {
+                            selectPowerForNonVat(model);
+                        } else {
                             selectAll2.setSelected(false);
-                            String sql = "delete from "+DatabaseActions.printerTable+" where id="+model.getId()+"";
-                            try {
-                                PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sql);
-                                ps.execute();
-                            } catch (SQLException exception) {
-                                exception.printStackTrace();
-                            }
+                            deSelectPowerForNonVat(model);
                         }
                     });
                     setGraphic(checkBox);
@@ -325,4 +251,98 @@ public class PrinterController implements Initializable{
             }
         };
     };
+
+    private void selectPowerForVat(Other2Model model) {
+        String sql = "insert into " + DatabaseActions.printerTable + "(customer,address,telephone,description," +
+                "amount,quantity,tran_date,vat,due_date,total_vat,id)values(?,?,?,?,?,?,?,?,?,?,?)";
+        String sql2 = "select amount from " + DatabaseActions.tableNameForOthers2 + " where id=" +
+                +model.getId() + "";
+        NumberFormat nf = NumberFormat.getInstance();
+        String amount1 = null;
+        try {
+            Statement statement = DatabaseActions.connectToDB().createStatement();
+            ResultSet resultSet = statement.executeQuery(sql2);
+            while (resultSet.next()) {
+                amount1 = String.valueOf(resultSet.getInt("amount"));
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        try {
+            PreparedStatement preparedStatement = DatabaseActions.connectToDB().prepareStatement(sql);
+            preparedStatement.setString(1, model.getCustomer());
+            preparedStatement.setString(2, model.getAddress());
+            preparedStatement.setString(3, model.getTelephone());
+            preparedStatement.setString(4, model.getDescription());
+            double amount3 = Double.parseDouble(model.getAmount());
+            preparedStatement.setString(5, nf.format(amount3));
+            preparedStatement.setInt(6, model.getQuantity());
+            preparedStatement.setString(7, model.getDate());
+            double vat = Double.parseDouble(model.getVat());
+            preparedStatement.setString(8, nf.format(vat));
+            preparedStatement.setString(9, model.getDueDate());
+            preparedStatement.setString(10, amount1);
+            preparedStatement.setInt(11, model.getId());
+            preparedStatement.execute();
+            DatabaseActions.dummyPrinterTable1(customer);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void selectPowerForNonVat(DummyOther2 model) {
+        String sql = "insert into " + DatabaseActions.printerTable2 + "(customer,address,telephone,description," +
+                "amount,quantity,tran_date,due_date,total_amount,id)values(?,?,?,?,?,?,?,?,?,?)";
+        String sql2 = "select amount from " + DatabaseActions.tableNameForOthers2 + " where id=" +
+                +model.getId() + "";
+        NumberFormat nf = NumberFormat.getInstance();
+        String amount1 = null;
+        try {
+            Statement statement = DatabaseActions.connectToDB().createStatement();
+            ResultSet resultSet = statement.executeQuery(sql2);
+            while (resultSet.next()) {
+                amount1 = String.valueOf(resultSet.getInt("amount"));
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        try {
+            PreparedStatement preparedStatement = DatabaseActions.connectToDB().prepareStatement(sql);
+            preparedStatement.setString(1, model.getCustomer());
+            preparedStatement.setString(2, model.getAddress());
+            preparedStatement.setString(3, model.getTelephone());
+            preparedStatement.setString(4, model.getDescription());
+            double amount3 = Double.parseDouble(model.getAmount());
+            preparedStatement.setString(5, nf.format(amount3));
+            preparedStatement.setInt(6, model.getQuantity());
+            preparedStatement.setString(7, model.getDate());
+            preparedStatement.setString(8, model.getDueDate());
+            preparedStatement.setString(9, amount1);
+            preparedStatement.setInt(10, model.getId());
+            preparedStatement.execute();
+            DatabaseActions.dummyPrinterTable2(customer);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void deSelectPowerForVat(Other2Model model) {
+        String sql = "delete from " + DatabaseActions.printerTable + " where id=" + model.getId() + "";
+        try {
+            PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sql);
+            ps.execute();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    private void deSelectPowerForNonVat(DummyOther2 model) {
+        String sql = "delete from " + DatabaseActions.printerTable + " where id=" + model.getId() + "";
+        try {
+            PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sql);
+            ps.execute();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
 }

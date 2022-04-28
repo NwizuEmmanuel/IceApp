@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report_vat" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="476839eb-ba15-46aa-916d-28b6b296993b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="313"/>
+	<queryString>
+		<![CDATA[select * from printer_table2]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="customer" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="telephone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="description" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="amount" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quantity" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tran_date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="due_date" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="total_amount" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<title>
+		<band height="152" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="119" height="112" uuid="bb6c7451-6be5-4c87-8352-ef5c288840a3"/>
+				<imageExpression><![CDATA["C:\\Users\\Onyekachukwu\\Pictures\\Ice Logo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="295" y="0" width="260" height="19" uuid="08b0dd43-2a3f-4a93-9d01-7cf806572b4e"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bethel Drive Old Onitsha Rd. Anambra State.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="33" width="115" height="19" uuid="0dabe207-5a52-490d-a999-ef8bb774a96a"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[sales@ice-ng.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="384" y="33" width="42" height="19" uuid="0cc1374d-6e82-4bcb-941d-53c7d42e9ffc"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Email:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="53" width="115" height="19" uuid="bfe48d9f-ab23-43c3-8caf-6d0a6dbc9683"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[+234-704 4442 817]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="384" y="53" width="27" height="19" uuid="de3b6335-04ec-45a3-b50a-14633d779274"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tel:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="73" width="115" height="19" uuid="e2d6ee27-25fb-4b9a-9c67-dba7b68c540f"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[+234-704 5375 814]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="384" y="93" width="171" height="19" uuid="9efc0562-f879-4d99-bf56-06226549f62b"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Website: www.ice-ng.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="384" y="124" width="171" height="19" uuid="974350a1-a14f-4982-839e-d9aa6bdd3d0b"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reg No: RC:2476307]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="213" splitType="Stretch">
+			<rectangle>
+				<reportElement x="434" y="2" width="121" height="26" uuid="e34c1849-4af0-4bed-9194-212eb0ecdf15"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="434" y="28" width="121" height="28" uuid="ec6d2684-e0ff-4833-a2d0-5699061bf114"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="434" y="56" width="121" height="28" uuid="6bfc0f69-fdb8-4705-8160-bdf034a8b609"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="0" y="0" width="225" height="148" uuid="bba6297f-2561-4a4e-a088-fbc07f142ecf"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="21" width="72" height="22" uuid="66167094-bbb0-443a-9d22-48df380e0adc"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Customer:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="65" width="72" height="22" uuid="ccb8c90f-4469-47be-8c6a-43617e1fd668"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Address:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="78" y="21" width="147" height="22" uuid="43ac98a2-4488-4457-9000-403ccbd413e8"/>
+				<textElement markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="6" y="108" width="83" height="22" uuid="667ede40-d145-4349-83b1-4c0ece579580"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telephone/FAX:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="89" y="108" width="136" height="22" uuid="e3bb947b-de46-4d66-b231-2dd4b36e4106"/>
+				<textElement markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{telephone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="78" y="65" width="147" height="22" uuid="85253dd8-59e7-4238-b0c1-cd46111f4a14"/>
+				<textElement markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="28" width="121" height="28" uuid="72e21c3c-a43d-4e6d-abb7-9d6880aca5e9"/>
+				<textElement markup="none">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{due_date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="444" y="56" width="111" height="28" uuid="f0ac0063-bb46-4ad7-bba0-d9db8e137a3e"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[168677]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="306" y="56" width="128" height="28" forecolor="#FFFFFF" backcolor="#000000" uuid="0049736c-682c-47a7-bf81-d45da331a589"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[INVOICE NUMBER]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="434" y="84" width="121" height="27" uuid="860f8d15-97f7-484c-b696-f0791b05f337"/>
+			</rectangle>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="444" y="0" width="111" height="28" uuid="ce6efe3a-ed9f-414f-9f4c-0c148dc61d0c"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="306" y="84" width="128" height="27" forecolor="#FFFFFF" backcolor="#000000" uuid="b6ab6c4c-b9f5-4d7b-bc15-e57cf6053464"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[ACCOUNT NUMBER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="444" y="85" width="111" height="26" uuid="f6d8f6aa-e264-4e48-92e5-919fb8db1a0c"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[C108200]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="306" y="29" width="128" height="27" forecolor="#FFFFFF" backcolor="#000000" uuid="78086d8e-766a-4603-bce0-e7f4bbdfae49"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[DUE DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="306" y="2" width="128" height="27" forecolor="#FFFFFF" backcolor="#000000" uuid="285bfb9e-f80e-49b1-9189-f274062fd694"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[INVOICE DATE]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="306" y="126" width="249" height="76" uuid="d61adb6a-6500-4516-b061-7abf1ae838a4"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="313" y="131" width="236" height="20" uuid="f65709a7-3d9e-4c02-9e62-03531808585f"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Account Manager: Mr Isaac Emeti]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="313" y="156" width="236" height="20" uuid="f7a04884-87c9-4dea-a4b1-927cdda78501"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Contact Number: 08166057323]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="313" y="180" width="236" height="20" uuid="4b475460-7d7d-41b5-b5d2-81488a3f7b17"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Email: emeti@ice-ng.com]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="37" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="17" width="175" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="a7412a7a-8a5a-449a-8702-f967a14cc585"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPTION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="175" y="17" width="131" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="8823a639-b519-40ac-bdba-9f27ac55d1b6"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AMOUNT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="306" y="17" width="100" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="b655d043-3c6a-4506-8d36-7680f590f96f"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[QUANTITY]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24">
+			<textField>
+				<reportElement x="0" y="0" width="175" height="20" uuid="37437647-be84-4bbf-ac33-76cf88d38624"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="175" y="0" width="131" height="20" uuid="1a73184a-c08a-493c-b995-b48e01df8cd3"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="306" y="0" width="100" height="20" uuid="0a1eeb23-d275-433f-8385-1fa6f11f83e8"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="53" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Opaque" x="420" y="3" width="134" height="34" uuid="e6fa3049-f825-44ef-b73c-bf0491c8c1f5"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement mode="Opaque" x="426" y="10" width="121" height="22" uuid="cbf7ae97-7190-4c26-8f91-b23af75cd0e1"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_amount}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="290" y="3" width="130" height="34" forecolor="#FFFFFF" backcolor="#000000" uuid="954942d7-f41d-4428-9748-e18dc07e82bd"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[TOTAL AMOUNT]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="230" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="205" height="20" uuid="efb1ff78-6f26-4c72-873c-fa25e82801a0"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bank details for Naira payments:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="26" width="175" height="20" uuid="6bde8a7e-c7ff-4114-9896-54ed26ede966"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Bank Name: Fidelity Bank PLC.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="46" width="175" height="20" uuid="1a10bd3e-06b6-4dce-8153-d32037df7112"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Account Name: Ice Integrated Services]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="66" width="175" height="20" uuid="0c784350-3c59-4979-ad97-4b76803d0c2a"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Account Number: 5600514626 (Naira)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="94" width="215" height="20" uuid="821fe33b-d64e-4a70-934c-54cf848fe70c"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Bank Name: Access (Diamond) Bank PLC.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="114" width="215" height="20" uuid="18572b77-e431-47c6-b01e-34da137d9fa0"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Account Name: Ice Integrated Services]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="134" width="215" height="20" uuid="b729243c-48df-44be-9069-ba6889049972"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Account Number: 0095115741 (Naira)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="246" y="26" width="138" height="22" uuid="87adc55f-6606-421d-8b6f-2751bcb560f7"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Terms and conditions:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="246" y="55" width="310" height="34" uuid="6686c4cf-4234-4380-9146-09228b17349f"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[2. If paying by cheque please note that product will not be  released or      renewed until payment has cleared (up to 3 business days).]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="246" y="87" width="310" height="40" uuid="f0417de5-b3f5-4c02-b4e2-2e8963ce9dbc"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[3. Ice Network holds the right to suspend or terminate this agreement if this client fails to settle amount when due. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="246" y="125" width="309" height="33" uuid="b88af79f-6fd6-4f60-9fee-3010b07949d0"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[4. In case of bank transfers or deposits the clients must ensure that the depositors name is in line with the name mentioned in the invoice.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="246" y="156" width="309" height="22" uuid="e29a6953-8b3c-4fae-b93d-5dab7088bba5"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[5. No cash payments should be made to any ICE staff.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="246" y="176" width="309" height="52" uuid="dec527b6-749a-43e0-8eef-b81b805594f2"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[6. NON-payment or delay in payment of subscription fees resulting in a debit balance on the customer account can lead to suspension or termination of all services. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="246" y="0" width="310" height="22" uuid="25476977-847e-4983-b1af-14a8a0164015"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOTE: Please qoute your deposit refernce on all transfers or direct deposits.]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

@@ -146,6 +146,7 @@ public class DatabaseActions {
         while(resultSet1.next()){
             total_vat=resultSet1.getString("sum(vat)");
         }
+        System.out.println(total_vat);
         assert total_vat != null;
         int total_vat1 = Integer.parseInt(total_vat);
         String main_total_vat = nf.format(total_vat1);
