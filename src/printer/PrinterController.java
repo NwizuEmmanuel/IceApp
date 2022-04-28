@@ -1,6 +1,7 @@
 package printer;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXListView;
 import database.DatabaseActions;
 import jasperReporter.InvoicePrinter;
@@ -88,6 +89,50 @@ public class PrinterController implements Initializable{
     private TableColumn actionCol1;
 
     @FXML
+    private JFXCheckBox selectAll1;
+
+    @FXML
+    private JFXCheckBox selectAll2;
+
+    boolean isSelectAllChecked1 = false;
+    boolean isSelectAllChecked2 = false;
+
+    @FXML
+    private void selectAll1Power() throws SQLException {
+        isSelectAllChecked1 = selectAll1.isSelected();
+        DatabaseActions.other2VatDataGenerator(customer,tableView);
+    }
+
+    @FXML
+    private void selectAll2Power() throws SQLException {
+        isSelectAllChecked2 = selectAll2.isSelected();
+        DatabaseActions.Other2CommonDataGenerator(customer,tableView1);
+    }
+
+    private void addDataToTableView1(){
+        actionCol.setCellFactory(actionCellFactory);
+        vatCol.setCellValueFactory(new PropertyValueFactory<>("vat"));
+        dueDateCol.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+        amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        desCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+        customerCol.setCellValueFactory(new PropertyValueFactory<>("customer"));
+        addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+    }
+
+    private void addDataToTableView2(){
+        dueDateCol1.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
+        dateCol1.setCellValueFactory(new PropertyValueFactory<>("date"));
+        amountCol1.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        quantityCol1.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        desCol1.setCellValueFactory(new PropertyValueFactory<>("description"));
+        customerCol1.setCellValueFactory(new PropertyValueFactory<>("customer"));
+        addressCol1.setCellValueFactory(new PropertyValueFactory<>("address"));
+        actionCol1.setCellFactory(actionCellFactory1);
+    }
+
+    @FXML
     private void clearText() {
     	textField.clear();
     }
@@ -117,26 +162,8 @@ public class PrinterController implements Initializable{
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
-		actionCol.setCellFactory(actionCellFactory);
-		vatCol.setCellValueFactory(new PropertyValueFactory<>("vat"));
-		dueDateCol.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
-		dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
-		amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
-		quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-		desCol.setCellValueFactory(new PropertyValueFactory<>("description"));
-		customerCol.setCellValueFactory(new PropertyValueFactory<>("customer"));
-		addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
-
-		dueDateCol1.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
-		dateCol1.setCellValueFactory(new PropertyValueFactory<>("date"));
-		amountCol1.setCellValueFactory(new PropertyValueFactory<>("amount"));
-		quantityCol1.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-		desCol1.setCellValueFactory(new PropertyValueFactory<>("description"));
-		customerCol1.setCellValueFactory(new PropertyValueFactory<>("customer"));
-		addressCol1.setCellValueFactory(new PropertyValueFactory<>("address"));
-		actionCol1.setCellFactory(actionCellFactory1);
-
+        addDataToTableView1();
+        addDataToTableView2();
 		btn1.setTooltip(new Tooltip("Print"));
 		btn2.setTooltip(new Tooltip("Print"));
 
@@ -151,11 +178,11 @@ public class PrinterController implements Initializable{
         });
 	}
 
-    Callback<TableColumn<DGVModel, String>, TableCell<DGVModel, String>> actionCellFactory = (param) -> {
+    Callback<TableColumn<DGVModel, String>, TableCell<Other2Model, String>> actionCellFactory = (param) -> {
 
         // setting a cell to accept button
 
-        return new TableCell<DGVModel, String>() {
+        return new TableCell<Other2Model, String>() {
 
             @Override
             public void updateItem(String item, boolean empty) {
@@ -166,6 +193,11 @@ public class PrinterController implements Initializable{
                 } else {
                     Other2Model model = tableView.getItems().get(getIndex());
                     CheckBox checkBox = new CheckBox();
+                    if(isSelectAllChecked1){
+                        checkBox.setSelected(true);
+                    }else {
+                        checkBox.setSelected(false);
+                    }
                     checkBox.setOnAction(e->{
                         if(checkBox.isSelected()){
                             String sql = "insert into "+DatabaseActions.printerTable+"(customer,address,telephone,description," +
@@ -204,6 +236,7 @@ public class PrinterController implements Initializable{
                                 ex.printStackTrace();
                             }
                         }else {
+                            selectAll1.setSelected(false);
                             String sql = "delete from "+DatabaseActions.printerTable+" where id="+model.getId()+"";
                             try {
                                 PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sql);
@@ -220,11 +253,11 @@ public class PrinterController implements Initializable{
         };
     };
 
-    Callback<TableColumn<DGVModel, String>, TableCell<DGVModel, String>> actionCellFactory1 = (param) -> {
+    Callback<TableColumn<DGVModel, String>, TableCell<DummyOther2, String>> actionCellFactory1 = (param) -> {
 
         // setting a cell to accept button
 
-        return new TableCell<DGVModel, String>() {
+        return new TableCell<DummyOther2, String>() {
 
             @Override
             public void updateItem(String item, boolean empty) {
@@ -233,11 +266,16 @@ public class PrinterController implements Initializable{
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    Other2Model model = tableView.getItems().get(getIndex());
+                    DummyOther2 model = tableView1.getItems().get(getIndex());
                     CheckBox checkBox = new CheckBox();
+                    if(isSelectAllChecked2){
+                        checkBox.setSelected(true);
+                    }else {
+                        checkBox.setSelected(false);
+                    }
                     checkBox.setOnAction(e->{
                         if(checkBox.isSelected()){
-                            String sql = "insert into "+DatabaseActions.printerTable+"(customer,address,telephone,description," +
+                            String sql = "insert into "+DatabaseActions.printerTable2+"(customer,address,telephone,description," +
                                     "amount,quantity,tran_date,due_date,total_amount,id)values(?,?,?,?,?,?,?,?,?,?)";
                             String sql2 = "select amount from "+DatabaseActions.tableNameForOthers2+" where id=" +
                                     +model.getId()+"";
@@ -262,17 +300,16 @@ public class PrinterController implements Initializable{
                                 preparedStatement.setString(5,nf.format(amount3));
                                 preparedStatement.setInt(6,model.getQuantity());
                                 preparedStatement.setString(7,model.getDate());
-                                double vat = Double.parseDouble(model.getVat());
-                                preparedStatement.setString(8,nf.format(vat));
-                                preparedStatement.setString(9,model.getDueDate());
-                                preparedStatement.setString(10,amount1);
-                                preparedStatement.setInt(11,model.getId());
+                                preparedStatement.setString(8,model.getDueDate());
+                                preparedStatement.setString(9,amount1);
+                                preparedStatement.setInt(10,model.getId());
                                 preparedStatement.execute();
-                                DatabaseActions.dummyPrinterTable1(customer);
+                                DatabaseActions.dummyPrinterTable2(customer);
                             } catch (SQLException ex) {
                                 ex.printStackTrace();
                             }
                         }else {
+                            selectAll2.setSelected(false);
                             String sql = "delete from "+DatabaseActions.printerTable+" where id="+model.getId()+"";
                             try {
                                 PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(sql);

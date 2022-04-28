@@ -69,7 +69,7 @@
                         <FontAwesomeIconView fill="WHITE" glyphName="PRINT" size="20" />
                      </graphic>
                   </JFXButton>
-                  <JFXCheckBox checkedColor="BLACK" text="selete all" unCheckedColor="BLACK">
+                  <JFXCheckBox fx:id="selectAll1" checkedColor="BLACK" onAction="#selectAll1Power" text="select all" unCheckedColor="BLACK">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -112,7 +112,7 @@
                               <FontAwesomeIconView fill="WHITE" glyphName="PRINT" size="20" />
                            </graphic>
                         </JFXButton>
-                        <JFXCheckBox checkedColor="BLACK" text="selete all" unCheckedColor="BLACK">
+                        <JFXCheckBox fx:id="selectAll2" checkedColor="BLACK" onAction="#selectAll2Power" text="select all" unCheckedColor="BLACK">
                            <font>
                               <Font size="15.0" />
                            </font>

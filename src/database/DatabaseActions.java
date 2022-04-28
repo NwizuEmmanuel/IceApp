@@ -144,13 +144,31 @@ public class DatabaseActions {
         Statement statement1 = DatabaseActions.connectToDB().createStatement();
         ResultSet resultSet1 = statement1.executeQuery(sql1);
         while(resultSet1.next()){
-            total_vat=resultSet1.getString("sum(vat)").replace(",","");
+            total_vat=resultSet1.getString("sum(vat)");
         }
         assert total_vat != null;
         int total_vat1 = Integer.parseInt(total_vat);
         String main_total_vat = nf.format(total_vat1);
         resultSet1.close();
         String query1 = "update "+printerTable+" set total_vat='"+main_total_vat+"' where 1";
+        PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(query1);
+        ps.execute();
+    }
+
+    static public void dummyPrinterTable2(String customer) throws SQLException {
+        NumberFormat nf = NumberFormat.getInstance();
+        String total_amount = null;
+        String sql1 = "select sum(amount) from "+DatabaseActions.printerTable2+" where customer='"+customer+"'";
+        Statement statement1 = DatabaseActions.connectToDB().createStatement();
+        ResultSet resultSet1 = statement1.executeQuery(sql1);
+        while(resultSet1.next()){
+            total_amount=resultSet1.getString("sum(amount)");
+        }
+        assert total_amount != null;
+        int total_amount1 = Integer.parseInt(total_amount);
+        String main_total_amount = nf.format(total_amount1);
+        resultSet1.close();
+        String query1 = "update "+printerTable2+" set total_amount='"+main_total_amount+"' where 1";
         PreparedStatement ps = DatabaseActions.connectToDB().prepareStatement(query1);
         ps.execute();
     }

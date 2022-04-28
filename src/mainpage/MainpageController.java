@@ -204,9 +204,12 @@ public class MainpageController implements Initializable {
 
     private void printerCleaner(){
         String sql = "delete from " + DatabaseActions.printerTable + " where id>=0";
+        String sql2 = "delete from " + DatabaseActions.printerTable2 + " where id>=0";
         try {
             PreparedStatement preparedStatement = DatabaseActions.connectToDB().prepareStatement(sql);
+            PreparedStatement preparedStatement2 = DatabaseActions.connectToDB().prepareStatement(sql2);
             preparedStatement.execute();
+            preparedStatement2.execute();
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
